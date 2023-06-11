@@ -1,5 +1,6 @@
 import java.awt.*
 import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 import javax.swing.JComponent
 import javax.swing.JFrame
@@ -18,7 +19,7 @@ fun main() {
 
 }
 
-class ArmVisualization: JComponent(), MouseMotionListener {
+class ArmVisualization: JComponent(), MouseListener, MouseMotionListener {
     init {
         addMouseMotionListener(this)
     }
@@ -57,5 +58,17 @@ class ArmVisualization: JComponent(), MouseMotionListener {
         mousePoint = Point2D(e?.x?.toDouble() ?: 0.0, e?.y?.toDouble() ?: 0.0)
         repaint()
     }
-    override fun mouseMoved(e: MouseEvent?) {}
+    override fun mouseMoved(e: MouseEvent?) {
+        mousePoint = Point2D(e?.x?.toDouble() ?: 0.0, e?.y?.toDouble() ?: 0.0)
+        repaint()
+    }
+    override fun mouseClicked(e: MouseEvent?) {
+        mousePoint = Point2D(e?.x?.toDouble() ?: 0.0, e?.y?.toDouble() ?: 0.0)
+        repaint()
+    }
+
+    override fun mousePressed(e: MouseEvent?) {}
+    override fun mouseReleased(e: MouseEvent?) {}
+    override fun mouseEntered(e: MouseEvent?) {}
+    override fun mouseExited(e: MouseEvent?) {}
 }
