@@ -1,3 +1,5 @@
+package v1
+
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -35,7 +37,9 @@ class ArmVisualization: JComponent(), MouseListener, MouseMotionListener {
         
         val offset = Point2D(size.getWidth()/2,size.getHeight()/2)
 
-        val threeSegmentArmKinematics = ThreeSegmentArmKinematics(180.0, 150.0, 30.0)
+//        val threeSegmentArmKinematics = v1.ThreeSegmentArmKinematics(180.0, 150.0, 30.0)
+        val threeSegmentArmKinematics = ThreeSegmentArmKinematics(10.0, 10.0, 10.0)
+
         val rootPoint = Point2D(0.0, 0.0)
         val endpointNotFlipped = mousePoint - offset
         val endpoint = Point2D(endpointNotFlipped.x, -endpointNotFlipped.y)
@@ -44,7 +48,7 @@ class ArmVisualization: JComponent(), MouseListener, MouseMotionListener {
         val armState = threeSegmentArmKinematics.calculateArmState(endpoint, endAngleRad)
 
         val pointsToDraw = listOf(rootPoint) + armState.asList()
-        pointsToDraw.map{Point2D(it.x, -it.y)}.map{ it + offset }.reversed().reduceIndexed { i, acc, it ->
+        pointsToDraw.map{ Point2D(it.x, -it.y) }.map{ it + offset }.reversed().reduceIndexed { i, acc, it ->
             g.stroke = BasicStroke(4f * i)
             g.color = Color((i*100).toDouble().pow(2.0).toInt())
             drawLine(acc, it)
@@ -52,23 +56,28 @@ class ArmVisualization: JComponent(), MouseListener, MouseMotionListener {
         }
     }
 
-    var mousePoint: Point2D = Point2D(1.0, 1.0)
+    private var mousePoint: Point2D = Point2D(20.0, 10.0)
+    private fun updateKinematics(mouseEvent: MouseEvent?) {
+        mousePoint = Point2D(mouseEvent?.x?.toDouble() ?: mousePoint.x, mouseEvent?.y?.toDouble() ?: mousePoint.y)
+        repaint()
+    }
 
     override fun mouseDragged(e: MouseEvent?) {
-        mousePoint = Point2D(e?.x?.toDouble() ?: 0.0, e?.y?.toDouble() ?: 0.0)
-        repaint()
+        updateKinematics(e)
     }
     override fun mouseMoved(e: MouseEvent?) {
-        mousePoint = Point2D(e?.x?.toDouble() ?: 0.0, e?.y?.toDouble() ?: 0.0)
-        repaint()
+//        updateKinematics(e)
     }
     override fun mouseClicked(e: MouseEvent?) {
-        mousePoint = Point2D(e?.x?.toDouble() ?: 0.0, e?.y?.toDouble() ?: 0.0)
-        repaint()
+        updateKinematics(e)
     }
 
-    override fun mousePressed(e: MouseEvent?) {}
-    override fun mouseReleased(e: MouseEvent?) {}
+    override fun mousePressed(e: MouseEvent?) {
+        updateKinematics(e)
+    }
+    override fun mouseReleased(e: MouseEvent?) {
+        updateKinematics(e)
+    }
     override fun mouseEntered(e: MouseEvent?) {}
     override fun mouseExited(e: MouseEvent?) {}
 }

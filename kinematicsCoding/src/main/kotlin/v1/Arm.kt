@@ -1,3 +1,5 @@
+package v1
+
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.*
@@ -15,13 +17,20 @@ class ThreeSegmentArmKinematics(
     }
 
     private fun calculateForearmEndpoint(endEffectorPositionRelativeToArmRoot: Point2D, endEffectorAngleRelativeToGroundRad: Double): Point2D {
-        return endEffectorPositionRelativeToArmRoot - Point2D.pointFromVector(endEffectorAngleRelativeToGroundRad.toBigDecimal(), wristLengthMM.toBigDecimal())
+        return endEffectorPositionRelativeToArmRoot - Point2D.pointFromVector(
+            endEffectorAngleRelativeToGroundRad.toBigDecimal(),
+            wristLengthMM.toBigDecimal()
+        )
     }
 
     private fun calculateUpperArmEndpoint(forearmEndpoint: Point2D): Point2D {
         val distanceFromRootToForearm = hypot(forearmEndpoint.x, forearmEndpoint.y).toBigDecimal().setScale(4, RoundingMode.DOWN).toDouble()
 
-        val angleOppositeForearmRad = RandomMath.angleRadiansFromSideLengths(oppositeSide = forearmLengthMM, upperArmLengthMM, distanceFromRootToForearm)
+        val angleOppositeForearmRad = RandomMath.angleRadiansFromSideLengths(
+            oppositeSide = forearmLengthMM,
+            upperArmLengthMM,
+            distanceFromRootToForearm
+        )
 
         val angleFromRootToForearmEndpointRad = root.angleToPointRad(forearmEndpoint)
 
@@ -50,7 +59,10 @@ class ThreeSegmentArmKinematics(
 
         val adjustedDistanceToEndEffector = distanceToEndEffector.coerceAtMost(maxArmLength)
 
-        return Point2D.pointFromVector(magnitude= adjustedDistanceToEndEffector.toBigDecimal(), angleRad= directionToEndEffector.toBigDecimal())
+        return Point2D.pointFromVector(
+            magnitude = adjustedDistanceToEndEffector.toBigDecimal(),
+            angleRad = directionToEndEffector.toBigDecimal()
+        )
     }
 
     private fun returnAngleInBounds(endEffectorPositionRelativeToArmRoot: Point2D, endEffectorAngleRelativeToGroundRad: Double): Double {
@@ -107,7 +119,7 @@ data class Point2D(val x: Double, val y: Double) {
         }
     }
 
-    override fun toString(): String = "Point2D($x, $y)"
+    override fun toString(): String = "v1.Point2D($x, $y)"
 }
 
 object RandomMath {
