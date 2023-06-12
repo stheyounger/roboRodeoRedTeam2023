@@ -15,7 +15,7 @@ class ThreeSegmentArmKinematics(
     val threeSegmentArm: ThreeSegmentArm
 ) {
 
-    private val root = Point2D(0.0, 0.0)
+    val root = Point2D(0.0, 0.0)
 
     data class Positions(val a: Point2D, val b: Point2D, val c: Point2D){
         fun asList(): List<Point2D> = listOf(a, b, c)
@@ -59,5 +59,5 @@ class ThreeSegmentArmKinematics(
         }
     }
 
-    class BadArmException(message: String): Exception(message= message)
+    class BadArmException(message: String): RuntimeException(message)
 }
