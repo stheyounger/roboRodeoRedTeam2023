@@ -21,8 +21,11 @@ data class Point2D(val x: Double, val y: Double) {
     }
 
     companion object {
-        fun pointFromVector(magnitude: BigDecimal, directionRadians: BigDecimal): Point2D {
+        private fun pointFromVector(magnitude: BigDecimal, directionRadians: BigDecimal): Point2D {
             return Point2D((magnitude * cos(directionRadians.toDouble()).toBigDecimal()).toDouble(), (magnitude * sin(directionRadians.toDouble()).toBigDecimal()).toDouble())
+        }
+        fun pointFromVector(magnitude: Double, directionRadians: Double): Point2D {
+            return pointFromVector(magnitude.toBigDecimal(), directionRadians.toBigDecimal())
         }
     }
 

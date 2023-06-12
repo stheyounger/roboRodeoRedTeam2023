@@ -27,8 +27,8 @@ class ThreeSegmentArmKinematics(
         if (distanceToTarget > threeSegmentArm.maxReach)
             throw BadArmException("Target is out of reach! (Move target closer)")
 
-        val b = target + Point2D.pointFromVector(   magnitude= threeSegmentArm.segmentCLength.toBigDecimal(),
-                                                    directionRadians= (targetAngle + PI).toBigDecimal())
+        val b = target + Point2D.pointFromVector(   magnitude= threeSegmentArm.segmentCLength,
+                                                    directionRadians= (targetAngle + PI))
         val maxReachOfB = threeSegmentArm.segmentALength + threeSegmentArm.segmentBLength
         val distanceToB = root.distanceTo(b)
         if (distanceToB > maxReachOfB)
@@ -36,8 +36,8 @@ class ThreeSegmentArmKinematics(
 
         val directionToB = root.angleToRadians(b)
         val directionToA = directionToB + angleRadiansFromSideLengths(oppositeSide = threeSegmentArm.segmentBLength, distanceToB, threeSegmentArm.segmentALength)
-        val a = root + Point2D.pointFromVector( magnitude= threeSegmentArm.segmentALength.toBigDecimal(),
-                                                directionRadians = directionToA.toBigDecimal())
+        val a = root + Point2D.pointFromVector( magnitude= threeSegmentArm.segmentALength,
+                                                directionRadians = directionToA)
         val distanceToA = root.distanceTo(a)
         if (distanceToA > threeSegmentArm.segmentALength)
             throw BadArmException("A is out of reach!")
@@ -52,8 +52,8 @@ class ThreeSegmentArmKinematics(
     private fun limitTarget(target: Point2D): Point2D {
         return if (root.distanceTo(target) > threeSegmentArm.maxReach) {
             val angleTowardTarget = root.angleToRadians(target)
-            Point2D.pointFromVector(magnitude= threeSegmentArm.maxReach.toBigDecimal(),
-                                    directionRadians= angleTowardTarget.toBigDecimal())
+            Point2D.pointFromVector(magnitude= threeSegmentArm.maxReach,
+                                    directionRadians= angleTowardTarget)
         } else {
             target
         }
