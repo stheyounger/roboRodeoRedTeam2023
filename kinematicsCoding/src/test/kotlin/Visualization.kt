@@ -22,8 +22,8 @@ fun main() {
 
 class TestArm: ThreeSegmentArm {
     override val segmentALength: Double = 100.0
-    override val segmentBLength: Double = 100.0
-    override val segmentCLength: Double = 50.0
+    override val segmentBLength: Double = 50.0
+    override val segmentCLength: Double = 40.0
 
     override val aAngleLimitsRadians: ClosedFloatingPointRange<Double> = 0.0..PI
     override val bAngleLimitsRadians: ClosedFloatingPointRange<Double> = 0.0..PI

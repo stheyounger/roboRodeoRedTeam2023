@@ -24,39 +24,49 @@ class ThreeSegmentArmKinematics(
 
     fun solvePositions(target: Point2D, targetAngle: Double): Positions {
         val distanceToTarget = root.distanceTo(target)
-        if (distanceToTarget > threeSegmentArm.maxReach)
-            throw BadArmException("Target is out of reach! (Move target closer)")
+        checkBoundsOfJointC(distanceToC= distanceToTarget)
 
         val b = target + Point2D.pointFromVector(   magnitude= threeSegmentArm.segmentCLength,
                                                     directionRadians= (targetAngle + PI))
         val maxReachOfB = threeSegmentArm.segmentALength + threeSegmentArm.segmentBLength
         val distanceToB = root.distanceTo(b)
-        if (distanceToB > maxReachOfB)
-            throw BadArmException("B is out of reach! (Change the target angle)")
+        val minDistanceToB = threeSegmentArm.segmentALength - threeSegmentArm.segmentBLength
+        checkBoundsOfJointB(distanceToB= distanceToB,
+                            minDistanceToB= minDistanceToB,
+                            maxReachOfB= maxReachOfB)
 
         val directionToB = root.angleToRadians(b)
-        val directionToA = directionToB + angleRadiansFromSideLengths(oppositeSide = threeSegmentArm.segmentBLength, distanceToB, threeSegmentArm.segmentALength)
+        val angleOppositeSegmentBInTriangleRadians = angleRadiansFromSideLengths(   oppositeSide= threeSegmentArm.segmentBLength,
+                                                                                    otherSideA= distanceToB,
+                                                                                    otherSideB= threeSegmentArm.segmentALength)
+        val directionToA = directionToB + angleOppositeSegmentBInTriangleRadians
         val a = root + Point2D.pointFromVector( magnitude= threeSegmentArm.segmentALength,
                                                 directionRadians = directionToA)
         val distanceToA = root.distanceTo(a)
-        if (distanceToA > threeSegmentArm.segmentALength)
-            throw BadArmException("A is out of reach!")
+        checkBoundsOfJointA(distanceToA= distanceToA)
 
         return Positions(c= target, b= b, a= a)
     }
 
-    private fun angleRadiansFromSideLengths(oppositeSide: Double, otherSideA: Double, otherSideB: Double): Double {
-        return acos((otherSideA.pow(2) + otherSideB.pow(2) - oppositeSide.pow(2)) / (2 * otherSideA * otherSideB))
+    private fun checkBoundsOfJointC(distanceToC: Double) {
+        if (distanceToC > threeSegmentArm.maxReach)
+            throw BadArmException("Target is out of reach! (Move target closer)")
     }
 
-    private fun limitTarget(target: Point2D): Point2D {
-        return if (root.distanceTo(target) > threeSegmentArm.maxReach) {
-            val angleTowardTarget = root.angleToRadians(target)
-            Point2D.pointFromVector(magnitude= threeSegmentArm.maxReach,
-                                    directionRadians= angleTowardTarget)
-        } else {
-            target
-        }
+    private fun checkBoundsOfJointB(distanceToB: Double, minDistanceToB: Double, maxReachOfB: Double) {
+        if (distanceToB > maxReachOfB)
+            throw BadArmException("B is out of reach! (Change the target angle)")
+        if (distanceToB < minDistanceToB)
+            throw BadArmException("B is too close! (End effector is too close)")
+    }
+
+    private fun checkBoundsOfJointA(distanceToA: Double) {
+        if (distanceToA != threeSegmentArm.segmentALength)
+            throw BadArmException("A is out of reach!")
+    }
+
+    private fun angleRadiansFromSideLengths(oppositeSide: Double, otherSideA: Double, otherSideB: Double): Double {
+        return acos((otherSideA.pow(2) + otherSideB.pow(2) - oppositeSide.pow(2)) / (2 * otherSideA * otherSideB))
     }
 
     class BadArmException(message: String): RuntimeException(message)
