@@ -12,7 +12,7 @@ import kotlin.math.pow
 
 //deals in points
 class ThreeSegmentArmKinematics(
-    val threeSegmentArm: ThreeSegmentArm
+    private val threeSegmentArm: ThreeSegmentArm
 ) {
 
     val root = Point2D(0.0, 0.0)
@@ -26,7 +26,7 @@ class ThreeSegmentArmKinematics(
         val distanceToTarget = root.distanceTo(target)
         if (isJointCOutOfBounds(distanceToC= distanceToTarget)) {
             println("C is out of bounds!")
-            return Positions(c= Point2D(Double.NaN, Double.NaN), b= Point2D(Double.NaN, Double.NaN), a= Point2D(Double.NaN, Double.NaN))
+            return Positions(c= Point2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY), b= Point2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY), a= Point2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY))
         }
 
         val b = target + Point2D.pointFromVector(   magnitude= threeSegmentArm.segmentCLength,
@@ -38,7 +38,7 @@ class ThreeSegmentArmKinematics(
                                 minDistanceToB= minDistanceToB,
                                 maxReachOfB= maxReachOfB)) {
             println("B is out of bounds!")
-            return Positions(c= target, b= Point2D(Double.NaN, Double.NaN), a= Point2D(Double.NaN, Double.NaN))
+            return Positions(c= target, b= Point2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY), a= Point2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY))
         }
 
         val directionToB = root.angleToRadians(b)
@@ -51,11 +51,12 @@ class ThreeSegmentArmKinematics(
         val distanceToA = root.distanceTo(a)
         if (isJointAOutOfBounds(distanceToA= distanceToA))  {
             println("A is out of reach!\ndistanceToA: $distanceToA\nsegmentALength: ${threeSegmentArm.segmentALength}")
-            return Positions(c= target, b= b, a= Point2D(Double.NaN, Double.NaN))
+            return Positions(c= target, b= b, a= Point2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY))
         }
 
         return Positions(c= target, b= b, a= a)
     }
+
     private fun isJointCOutOfBounds(distanceToC: Double): Boolean {
         return distanceToC > threeSegmentArm.maxReach
     }
@@ -69,8 +70,8 @@ class ThreeSegmentArmKinematics(
     }
 
     private fun isJointAOutOfBounds(distanceToA: Double): Boolean {
-        val offset = 0.0001
-        return distanceToA !in threeSegmentArm.segmentALength-offset..threeSegmentArm.segmentALength+offset
+        val error = 0.0001
+        return distanceToA !in threeSegmentArm.segmentALength-error..threeSegmentArm.segmentALength+error
     }
 
     private fun angleRadiansFromSideLengths(oppositeSide: Double, otherSideA: Double, otherSideB: Double): Double {
