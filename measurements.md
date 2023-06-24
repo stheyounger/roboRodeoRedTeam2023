@@ -1,11 +1,10 @@
-Stairs:
+stairs:
 height 26"
 length 14 3/4"
 hypotenuse 30.5"
-
 staircase width 8"
 first stair height 2 1/4"
-avrage height between stairs 1 13/16"
+average height between stairs 1 13/16"
 stair depth 2 3/16"
 open stair depth 1 5/8"
 stair thickness 20mm
@@ -31,7 +30,7 @@ upper wall height 11 7/16"
 upper passage length 51.5"
 upper passage width 59 11/16"
 upper level 24 3/4"
-upper passage total width 61"
+~~upper passage total width 61"~~
 hall way diagonal 31"
 
 door latch diameter 23.7mm
