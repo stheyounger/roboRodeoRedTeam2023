@@ -1,6 +1,6 @@
 const http = require('http')
 
-const hostname = '127.0.0.69'
+const hostname = '192.168.0.158'
 const port = 8080
 
 const fs = require('fs');
@@ -8,7 +8,7 @@ const fs = require('fs');
 const server = http.createServer((req, res) => {
   res.statusCode = 200
   res.setHeader('Content-Type', 'text/html')
-  fs.createReadStream('index.html').pipe(res)
+  fs.createReadStream('frontEnd/index.html').pipe(res)
 })
 
 server.listen(port, hostname, () => {
