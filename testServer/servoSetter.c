@@ -17,17 +17,18 @@ int main() {
 
 //	pinOnOffTest(targetPin);
 
-	softPwmCreate(targetPin, 100, 100);
-	softPwmWrite(targetPin, 50);
-	int delayTime = 20;
+	softPwmCreate(targetPin, 0, 100);
+//	softPwmWrite(targetPin, 50);
+	
+	int delayMilis = 200;
 	for (;;) {
     		for (int bright = 0 ; bright < 100 ; ++bright) {
-      			softPwmWrite (1, bright) ;
-      			delay(delayTime) ;
+      			softPwmWrite (targetPin, bright) ;
+      			delay(delayMilis) ;
     		}
 		for (int bright = 100 ; bright >= 0 ; --bright) {
-      			softPwmWrite(1, bright) ;
-      			delay(delayTime);
+      			softPwmWrite(targetPin, bright) ;
+      			delay(delayMilis);
     		}
   	}
 	
