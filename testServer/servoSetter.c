@@ -16,7 +16,7 @@ int main() {
 	if (wiringPiSetup() == -1)
     		return 1 ;
 	
-	int targetPin = 0;
+	const int targetPin = 0;
 	
 	pwmTest(targetPin);
 	
