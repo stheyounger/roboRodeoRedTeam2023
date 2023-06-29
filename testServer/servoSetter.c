@@ -19,7 +19,7 @@ int main() {
 
 	softPwmCreate(targetPin, 100, 100);
 	softPwmWrite(targetPin, 50);
-	int delayTime = 10;
+	int delayTime = 20;
 	for (;;) {
     		for (int bright = 0 ; bright < 100 ; ++bright) {
       			softPwmWrite (1, bright) ;
