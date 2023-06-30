@@ -1,1 +1,17 @@
-<h1>who's your moma?</h1>
+<h1>Here come the test, da da da da. -The fifth beatle</h1>
+<button class="button" onclick="post()" >Click it or kick it</button>
+<script> 
+var http = new XMLHttpRequest();
+var params = "text=stuff";
+
+function post() {
+	console.log("clicked");
+	http.open("POST", "hi there", true);
+
+	http.setRequestHeader("Content-type", "text/plain");
+//	http.setRequestHeader("Content-length", params.length);
+//	http.setRequestHeader("Connection", "close");
+
+	http.send(params);
+}
+</script>
