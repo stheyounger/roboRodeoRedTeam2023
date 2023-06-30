@@ -3,10 +3,10 @@
 #include <stdint.h>
 
 #include <wiringPi.h>
-//#include <softServo.h>
 #include <softPwm.h>
+#include <softServo.h>
 
-
+void servoTest(int);
 void pwmTest(int);
 void pinOnOffTest(int);
 
@@ -18,16 +18,25 @@ int main() {
 	
 	const int targetPin = 0;
 	
+//	servoTest(targetPin);
 	pwmTest(targetPin);
 	
 	return 0;
 }
 
+//void servoTest(int targetPin) {
+//	softServoSetup(0, 1, 2, 3, 4, 5, 6, 7);
+//	softServoWrite(0,  0);
+//	for(;;) {
+//		delay(10);
+//	}
+//}
+
 void pwmTest(int targetPin) {
-	int pwmRange = 100;
+	const int pwmRange = 100;
         softPwmCreate(targetPin, 0, pwmRange);
         
-        int delayMilis = 100;
+        const int delayMilis = 100;
         for (;;) {
                 for (int bright = 0; bright < pwmRange; ++bright) {
                         softPwmWrite(targetPin, bright);

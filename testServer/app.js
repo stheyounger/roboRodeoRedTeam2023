@@ -6,11 +6,13 @@ const port = 8080
 const fs = require('fs');
 
 const server = http.createServer((req, res) => {
-  res.statusCode = 200
-  res.setHeader('Content-Type', 'text/html')
-  fs.createReadStream('frontEnd/index.html').pipe(res)
+	res.writeHead(200, {'Content-Type': 'text/html'})
+  	fs.createReadStream('frontEnd/index.html').pipe(res)
 })
 
 server.listen(port, hostname, () => {
-  console.log(`Server running at http://`+hostname+`:`+port+`/`)
+ 	console.log(`Server running at http://`+hostname+`:`+port+`/`)
 })
+
+//Request types:
+//GET, POST, PUT, PATCH, and DELETE
