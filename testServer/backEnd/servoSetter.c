@@ -4,23 +4,34 @@
 
 #include <wiringPi.h>
 #include <softPwm.h>
-#include <softServo.h>
+//#include <softServo.h>
 
 void servoTest(int);
 void pwmTest(int);
 void pinOnOffTest(int);
 
-int main() {
-	printf("Pwm output test.\n");
-	
+int main(int argc, char **argv) {
+	const int servoNumber = atoi(argv[1]);
+	const int servoPosition = atoi(argv[2]);
+	printf("servo %d, position %d \n", servoNumber, servoPosition);
+
 	if (wiringPiSetup() == -1)
     		return 1 ;
-	
-	const int targetPin = 0;
-	
+
+
+	int targetPin;
+	if (servoNumber == 1) {
+		targetPin = 8;
+	} else {
+		targetPin = 12;
+	}
+
+        softPwmCreate(targetPin, 0, 100);
+	softPwmWrite(targetPin, servoPosition);
+
 //	servoTest(targetPin);
-	pwmTest(targetPin);
-	
+//	pwmTest(targetPin);
+
 	return 0;
 }
 

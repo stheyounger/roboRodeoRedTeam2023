@@ -8,20 +8,14 @@ const fs = require('fs');
 const server = http.createServer((req, res) => {
 	const { headers, method, url } = req;
 	if (req.method == 'POST') {
-		console.log('data: ' + url.toString());
-//    		var body = ''
-//    		request.on('data', function(data) {
-//      			body += data
-//      			console.log('Partial body: ' + body)
-//    		})
-//    		request.on('end', function() {
-//      			console.log('Body: ' + body)
-//      			response.writeHead(200, {'Content-Type': 'text/html'})
-//      			response.end('post received')
-//    		})
+    		req.on('data', function(data) {
+      			console.log('Data: ' + data)
+			const parsed = JSON.parse(data);
+    			controlServo(parsed.slider, parsed.value);
+		})
   	}
 	res.writeHead(200, {'Content-Type': 'text/html'})
-  	fs.createReadStream('frontEnd/index.html').pipe(res)
+  	fs.createReadStream('../frontEnd/index.html').pipe(res)
 })
 
 server.listen(port, hostname, () => {
@@ -30,3 +24,8 @@ server.listen(port, hostname, () => {
 
 //Request types:
 //GET, POST, PUT, PATCH, and DELETE
+
+function controlServo(servoNumberInt, positionInt) {
+	const { exec } = require("child_process");
+	exec("./servoSetter " + servoNumberInt + " " + positionInt, (error, stdout, stderr) => console.log(stdout));
+}
