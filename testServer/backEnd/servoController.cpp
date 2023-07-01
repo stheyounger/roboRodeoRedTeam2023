@@ -40,9 +40,10 @@ int main(int argc, char **argv) {
 	const int actualPosition = servoPosition * conversion;
 	
 	printf("servo %d, conversion %d, position %d, actual %d \n", servoNumber, conversion, servoPosition, actualPosition);
-
-	pinMode(targetPin, PWM_OUTPUT);
+	pwmSetClock(100);
+	//pinMode(targetPin, PWM_OUTPUT);
 	pwmSetMode(PWM_MODE_MS);
+	//pwmSetMode(PWM_MODE_BAL);
 	pwmWrite(targetPin, actualPosition);
 	
 }
