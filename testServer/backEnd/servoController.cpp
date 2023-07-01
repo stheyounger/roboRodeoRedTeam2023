@@ -39,6 +39,7 @@ int main(int argc, char **argv) {
 	const double conversion = 1024.0/100.0;
 
 	pinMode(targetPin, PWM_OUTPUT);
+	pwmSetMode(PWM_MODE_MS);
 	pwmWrite(targetPin, servoPosition * conversion);
 	
 }
