@@ -9,9 +9,7 @@ const server = http.createServer((req, res) => {
 	const { headers, method, url } = req;
 	if (req.method == 'POST') {
     		req.on('data', function(data) {
-      			console.log('Data: ' + data)
-			const parsed = JSON.parse(data);
-    			controlServo(parsed.slider, parsed.value);
+    			sendData(data);
 		})
   	}
 	res.writeHead(200, {'Content-Type': 'text/html'})
@@ -25,7 +23,17 @@ server.listen(port, hostname, () => {
 //Request types:
 //GET, POST, PUT, PATCH, and DELETE
 
+function sendData(dataJson) {
+	const dataString = JSON.parse(dataJson);
+	console.log(dataString);
+	fs.writeFile('dataFile.txt', dataString, err => {
+		if (err) {
+			console.log("err %s\n", err);
+		}
+	});
+}
+
 function controlServo(servoNumberInt, positionInt) {
 	const { exec } = require("child_process");
-	exec("./servoSetter " + servoNumberInt + " " + positionInt, (error, stdout, stderr) => console.log(stdout));
+	exec("./servoController " + servoNumberInt + " " + positionInt, (error, stdout, stderr) => console.log(stdout));
 }
