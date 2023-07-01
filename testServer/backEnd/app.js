@@ -1,9 +1,9 @@
 const http = require('http')
+const { exec } = require("child_process");
+const fs = require('fs');
 
 const hostname = '192.168.0.158'
 const port = 8080
-
-const fs = require('fs');
 
 const server = http.createServer((req, res) => {
 	const { headers, method, url } = req;
@@ -11,10 +11,13 @@ const server = http.createServer((req, res) => {
     		req.on('data', function(data) {
     			const dataString = JSON.parse(data);
 			controlServo(dataString.slider, dataString.value);
+			res.writeHead(200, {'Content-Type': 'text/plain'})
+			res.end("yup")
 		})
-  	}
-	res.writeHead(200, {'Content-Type': 'text/html'})
-  	fs.createReadStream('../frontEnd/index.html').pipe(res)
+  	}else{
+		res.writeHead(200, {'Content-Type': 'text/html'})
+  		fs.createReadStream('../frontEnd/index.html').pipe(res)
+	}
 })
 
 server.listen(port, hostname, () => {
@@ -35,6 +38,5 @@ function sendData(dataJson) {
 }
 
 function controlServo(servoNumberInt, positionInt) {
-	const { exec } = require("child_process");
 	exec("sudo ./servoController " + servoNumberInt + " " + positionInt, (error, stdout, stderr) => console.log(stdout));
 }

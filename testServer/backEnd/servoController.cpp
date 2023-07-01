@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
                 return 1 ;
         const int servoNumber = stoi(argv[1]);
         const int servoPosition = stoi(argv[2]);
-        printf("servo %d, position %d hi there bud\n", servoNumber, servoPosition);
+//        printf("servo %d, position %d hi there bud\n", servoNumber, servoPosition);
 
         int targetPin;
         if (servoNumber == 1) {
@@ -36,11 +36,14 @@ int main(int argc, char **argv) {
                 targetPin = 26;
         }
 
-	const double conversion = 1024.0/100.0;
+	const int conversion = 1024/100;
+	const int actualPosition = servoPosition * conversion;
+	
+	printf("servo %d, conversion %d, position %d, actual %d \n", servoNumber, conversion, servoPosition, actualPosition);
 
 	pinMode(targetPin, PWM_OUTPUT);
 	pwmSetMode(PWM_MODE_MS);
-	pwmWrite(targetPin, servoPosition * conversion);
+	pwmWrite(targetPin, actualPosition);
 	
 }
 /*int main(int argc, char **argv) {
