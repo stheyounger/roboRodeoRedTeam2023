@@ -21,9 +21,9 @@ int main(int argc, char **argv) {
 
 	int targetPin;
 	if (servoNumber == 1) {
-		targetPin = 8;
+		targetPin = 23;
 	} else {
-		targetPin = 12;
+		targetPin = 26;
 	}
 
         softPwmCreate(targetPin, 0, 100);
