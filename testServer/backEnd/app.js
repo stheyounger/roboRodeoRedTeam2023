@@ -9,7 +9,8 @@ const server = http.createServer((req, res) => {
 	const { headers, method, url } = req;
 	if (req.method == 'POST') {
     		req.on('data', function(data) {
-    			sendData(data);
+    			const dataString = JSON.parse(data);
+			controlServo(dataString.slider, dataString.value);
 		})
   	}
 	res.writeHead(200, {'Content-Type': 'text/html'})
@@ -35,5 +36,5 @@ function sendData(dataJson) {
 
 function controlServo(servoNumberInt, positionInt) {
 	const { exec } = require("child_process");
-	exec("./servoController " + servoNumberInt + " " + positionInt, (error, stdout, stderr) => console.log(stdout));
+	exec("sudo ./servoController " + servoNumberInt + " " + positionInt, (error, stdout, stderr) => console.log(stdout));
 }
