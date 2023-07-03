@@ -1,3 +1,3 @@
-# The Four Horsemen Of The Robot Rodeo
+# The Robot Rodeo Red Team
 
 Here's our code
