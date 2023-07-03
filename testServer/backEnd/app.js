@@ -2,7 +2,7 @@ const http = require('http')
 const { exec } = require("child_process");
 const fs = require('fs');
 
-const hostname = '192.168.0.158'
+const hostname = '192.168.0.176'
 const port = 8080
 
 const server = http.createServer((req, res) => {
@@ -38,5 +38,5 @@ function sendData(dataJson) {
 }
 
 function controlServo(servoNumberInt, positionInt) {
-	exec("sudo ./servoController " + servoNumberInt + " " + positionInt, (error, stdout, stderr) => console.log(stdout));
+	exec("sudo ./pwmControl " + servoNumberInt + " " + positionInt, (error, stdout, stderr) => console.log(stdout));
 }
