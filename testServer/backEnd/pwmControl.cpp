@@ -10,14 +10,8 @@ int main() {
 	sleep(1);
 	gpioWrite(17, 0);
 
-	gpioServo(12, 1000);
+	gpioServo(12, 500);
 	sleep(1);
-	gpioServo(12, 2000);
-	sleep(1);
-
-//	gpioSetMode(12, PI_OUTPUT);
-//	gpioHardwarePWM(12, 25000, 0);	
-//	sleep(1);
-//	gpioHardwarePWM(12, 25000, 500000);	
-
+	gpioServo(12, 2500);
+	sleep(2);
 }
