@@ -1,0 +1,57 @@
+<h1>Advanced servo control interface below</h1>
+
+<br>
+Servo 1
+<input id="slider1" type="range" min="0" max="100" value="50">
+
+<br>
+Servo 2
+<input id="slider2" type="range" min="0" max="100" value="50">
+
+<script>
+        var sending;
+	var latest;
+ 
+	const slider1 = document.getElementById("slider1");
+	slider1.oninput = function(e) {
+		const value = e.target.value
+        	console.log("slider 1: " + value);
+		postJson({ "slider": 1, "value": value });
+	}
+
+	
+        const slider2 = document.getElementById("slider2");
+        slider2.oninput = function() {
+                console.log("slider 2: " + slider2.value);
+                postJson({ "slider": 2, "value": slider2.value });
+        }
+
+	const http = new XMLHttpRequest();
+
+	function postJson(jsonObject) {
+		if(sending){
+			console.log("Hey, looks like something is in-progress.  Just gonna ignore this", jsonObject)
+			latest = jsonObject
+		}else{
+			sending = jsonObject
+		
+			http.open("POST", "", true);
+	
+			http.setRequestHeader("Content-type", "application/json");
+	
+			http.onload = () => {
+				sending = undefined;
+				const next = latest
+				latest = undefined
+				if(next){
+					postJson(next)
+				}
+				console.log("done sending")
+			};
+	
+			const stringified = JSON.stringify(jsonObject)
+                	console.log("Posting json: " + stringified);
+			http.send(stringified);
+		}
+	}
+</script>
