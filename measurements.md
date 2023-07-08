@@ -9,7 +9,7 @@ stair depth 2 3/16"
 open stair depth 1 5/8"
 stair thickness 20mm
 stair side thickness 18.5mm
-front of first stair to back of staircase 14 15/16" 
+front of first stair to back of staircase 14 15/16"
 
 bottom of rail to stair 54.7mm
 rail diameter 7.8mm

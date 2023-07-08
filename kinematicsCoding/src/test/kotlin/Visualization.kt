@@ -21,9 +21,9 @@ fun main() {
 }
 
 class TestArm: ThreeSegmentArm {
-    override val segmentALength: Double = 100.0
-    override val segmentBLength: Double = 50.0
-    override val segmentCLength: Double = 40.0
+    override val segmentALength: Double = 50.0
+    override val segmentBLength: Double = 30.0
+    override val segmentCLength: Double = 20.0
 
     override val aAngleLimitsRadians: ClosedFloatingPointRange<Double> = 0.0..PI
     override val bAngleLimitsRadians: ClosedFloatingPointRange<Double> = 0.0..PI
@@ -49,10 +49,11 @@ class ArmVisualization: JComponent(), MouseListener, MouseMotionListener {
         val offset = Point2D(size.getWidth()/2,size.getHeight()/2)
         val endpointNotFlipped = mousePoint - offset
 
-        val endpoint = Point2D(endpointNotFlipped.x, -endpointNotFlipped.y)
-        val endAngleRad = Math.toRadians(90.0)//rootPoint.angleToPointRad(endpoint)
-
         val testArm = TestArm()
+
+        val endpoint = Point2D(endpointNotFlipped.x, -endpointNotFlipped.y)
+        val endAngleRad = testArm.kinematics.root.angleToRadians(endpoint)
+
         val armState = testArm.kinematics.solvePositions(endpoint, endAngleRad)
 
         val pointsToDraw = listOf(testArm.kinematics.root) + armState.asList()
