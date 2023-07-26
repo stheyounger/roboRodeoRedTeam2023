@@ -1,0 +1,86 @@
+<h1>Advanced servo control interface below</h1>
+
+<br>
+<h3>Keybinds:</h3>
+<p>
+Left side: Q forward, A backward
+Right side: W forward, S backward
+
+Front pivot: Up-Arrow pivot down, Down-Arrow pivot up
+Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
+</p>
+
+<h3>Status:</h3>
+<p>
+Nothing yet
+</p>
+<script>
+	document.addEventListener('keydown', (event) => {
+ 		var name = event.key;
+ 		var code = event.code;
+		
+		postJson({"keyCode":event.code});
+/*		switch(event.code) {
+			case "KeyQ":
+				console.log("q");
+				break;
+			case "KeyA":
+				console.log("a");
+				break;
+			case "KeyW":
+				console.log("w");
+				break;
+			case "KeyS":
+				console.log("s");
+				break;
+			case "ArrowUp":
+				console.log("aA");
+				break;
+			case "ArrowDown":
+				console.log("aD");
+				break;
+			case "ArrowRight":
+				console.log("aR");
+				break;
+			case "ArrowLeft":
+				console.log("aL");
+				break;	
+			default: 
+				console.log("other key"); 
+				break;
+		}*/
+	}, false);
+
+
+	var sending;
+	var latest;
+ 
+	const http = new XMLHttpRequest();
+
+	function postJson(jsonObject) {
+		if(sending){
+			console.log("Hey, looks like something is in-progress.  Just gonna ignore this", jsonObject)
+			latest = jsonObject
+		}else{
+			sending = jsonObject
+		
+			http.open("POST", "", true);
+	
+			http.setRequestHeader("Content-type", "application/json");
+	
+			http.onload = () => {
+				sending = undefined;
+				const next = latest
+				latest = undefined
+				if(next){
+					postJson(next)
+				}
+				console.log("done sending")
+			};
+	
+			const stringified = JSON.stringify(jsonObject)
+                	console.log("Posting json: " + stringified);
+			http.send(stringified);
+		}
+	}
+</script>

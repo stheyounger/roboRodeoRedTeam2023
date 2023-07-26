@@ -10,13 +10,13 @@ const server = http.createServer((req, res) => {
 	if (req.method == 'POST') {
     		req.on('data', function(data) {
     			const dataString = JSON.parse(data);
-			controlServo(dataString.slider, dataString.value);
 			res.writeHead(200, {'Content-Type': 'text/plain'})
 			res.end("yup")
+			console.log(dataString)
 		})
   	}else{
 		res.writeHead(200, {'Content-Type': 'text/html'})
-  		fs.createReadStream('../frontEnd/index.html').pipe(res)
+  		fs.createReadStream('webControl.html').pipe(res)
 	}
 })
 
@@ -24,8 +24,6 @@ server.listen(port, hostname, () => {
  	console.log(`Server running at http://`+hostname+`:`+port+`/`)
 })
 
-//Request types:
-//GET, POST, PUT, PATCH, and DELETE
 
 function sendData(dataJson) {
 	const dataString = JSON.parse(dataJson);
@@ -35,8 +33,4 @@ function sendData(dataJson) {
 			console.log("err %s\n", err);
 		}
 	});
-}
-
-function controlServo(servoNumberInt, positionInt) {
-	exec("sudo ./pwmControl " + servoNumberInt + " " + positionInt, (error, stdout, stderr) => console.log(stdout));
 }
