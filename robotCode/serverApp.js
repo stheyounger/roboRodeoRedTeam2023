@@ -74,7 +74,11 @@ socket.on('connection', (ws) => {
 		//const outbound = JSON.stringify(message);
 		console.log("recived message: " + messageAsString);
         	ws.send("Wassap it the server");
-    	});
+		fs.readFile('image.png', (err, data) => {
+        		if (err) throw err; // Fail if the file can't be read. 
+        		ws.send(data); // Send the file data to the browser.
+    		});   
+	});
 	ws.on("close", () => {
 		console.log("socket closed");
     	});
