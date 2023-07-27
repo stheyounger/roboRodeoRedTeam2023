@@ -1,8 +1,10 @@
 const http = require('http')
 const { exec } = require("child_process");
 const fs = require('fs');
+const os = require('os');
 
-const hostname = '192.168.0.176'
+const networkInterfaces = os.networkInterfaces();
+const hostname = networkInterfaces['wlan0'][0]['address']
 const port = 8080
 
 const server = http.createServer((req, res) => {
@@ -37,8 +39,11 @@ function handlePost(data) {
 
 function convertKeyPressToAction(keyPressed) {
 	switch (keyPressed) {
-		case "KeyA":
+		case "KeyQ":
 			return { portNumber : "0", position : "1" };
+			break;
+		case "KeyA":
+			return { portNumber : "0", position : "0" };
 			break;
 		default:
 			return null;
