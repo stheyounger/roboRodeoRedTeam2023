@@ -15,40 +15,45 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
            controls></video>
 
 <script>
+
+	const socket = new WebSocket('ws://192.168.0.176:8081/')
+	socket.onopen = (event) => {
+		socket.send("Hey, it's the client")
+		console.log("opened");
+	};
+	socket.onmessage = (event) => {
+		console.log("message " + event.data)
+	}
+
+
+	/*(async function() {
+    		const ws = await connectToServer();
+
+		const messageBody = { "keyCode" : "KeyZ" };
+        	ws.send(JSON.stringify(messageBody));
+
+		ws.onmessage = (webSocketMessage) => {
+        		const messageBody = JSON.parse(webSocketMessage.data);
+    		};
+
+		async function connectToServer() {
+        		const ws = new WebSocket('ws://192.168.0.176:8000/ws');
+        		return new Promise((resolve, reject) => {
+            			const timer = setInterval(() => {
+                			if(ws.readyState === 1) {
+                    				clearInterval(timer)
+                    				resolve(ws);
+                			}
+            			}, 10);
+        		});
+    		}
+	})();*/
+
 	document.addEventListener('keydown', (event) => {
  		var name = event.key;
  		var code = event.code;
 		
 		postJson({"keyCode":event.code});
-/*		switch(event.code) {
-			case "KeyQ":
-				console.log("q");
-				break;
-			case "KeyA":
-				console.log("a");
-				break;
-			case "KeyW":
-				console.log("w");
-				break;
-			case "KeyS":
-				console.log("s");
-				break;
-			case "ArrowUp":
-				console.log("aA");
-				break;
-			case "ArrowDown":
-				console.log("aD");
-				break;
-			case "ArrowRight":
-				console.log("aR");
-				break;
-			case "ArrowLeft":
-				console.log("aL");
-				break;	
-			default: 
-				console.log("other key"); 
-				break;
-		}*/
 	}, false);
 
 

@@ -3,9 +3,13 @@ const { exec } = require("child_process");
 const fs = require('fs');
 const os = require('os');
 
+const WebSocket = require('ws');
+
 const networkInterfaces = os.networkInterfaces();
 const hostname = networkInterfaces['wlan0'][0]['address']
 const port = 8080
+
+
 
 const root = (req, res)=>{
 	const { headers, method, url } = req;
@@ -39,12 +43,19 @@ const video = (req, res) => {
 	}
 }
 
+const wsSite = (req, res) => {
+	const { headers, method, url } = req;
+	res.writeHead(200, {'Content-Type': 'text/html'})
+  	fs.createReadStream('webControl.html').pipe(res)
+}
+
 const server = http.createServer((req, res) => {
 	const {url} = req;
 
 	const paths = {
-	   "/":root,
-	   "/video":video
+		"/":root,
+		"/video":video/*,
+		"/ws": wsSite*/
 	}
 
 	paths[url](req, res)
@@ -53,6 +64,24 @@ const server = http.createServer((req, res) => {
 server.listen(port, hostname, () => {
  	console.log(`Server running at http://`+hostname+`:`+port+`/`)
 })
+
+
+const socket = new WebSocket.Server({ port: 8081 });
+socket.on('connection', (ws) => {
+	ws.on('message', (messageAsString) => {
+		//const message = JSON.parse(messageAsString);
+
+		//const outbound = JSON.stringify(message);
+		console.log("recived message: " + messageAsString);
+        	//ws.send(outbound);
+    	});
+	ws.on("close", () => {
+		console.log("socket closed");
+    	});
+
+	console.log("socket connected");
+});
+
 
 function handlePost(data) {
 	if (isJson(data)) {
