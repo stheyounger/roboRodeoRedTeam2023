@@ -7,7 +7,7 @@ const networkInterfaces = os.networkInterfaces();
 const hostname = networkInterfaces['wlan0'][0]['address']
 const port = 8080
 
-const server = http.createServer((req, res) => {
+const root = (req, res)=>{
 	const { headers, method, url } = req;
 	if (req.method == 'POST') {
     		req.on('data', function(data) {
@@ -17,10 +17,43 @@ const server = http.createServer((req, res) => {
 			console.log("Server recived: " + data);
 			handlePost(data)
 		})
-  	}else{
+  	} else if (req.method == "GET") {
 		res.writeHead(200, {'Content-Type': 'text/html'})
   		fs.createReadStream('webControl.html').pipe(res)
 	}
+}
+
+const video = (req, res) => {
+	const { headers, method, url } = req;
+	if (req.method == "GET") {
+		console.log("we gottem")
+		const range = req.headers.range
+  		const videoPath = 'video.mp4';
+    		const videoSize = fs.statSync(videoPath).size
+    		const chunkSize = 1 * 1e6;
+    		const start = Number(range.replace(/\D/g, ""))
+    		const end = Math.min(start + chunkSize, videoSize - 1)
+    		const contentLength = end - start + 1;
+    		const headers = {
+        		"Content-Range": `bytes ${start}-${end}/${videoSize}`,
+        		"Accept-Ranges": "bytes",
+        		"Content-Length": contentLength,
+        		"Content-Type": "video/mp4"
+    		}
+    		res.writeHead(206, headers)
+		fs.createReadStream(videoPath, {start, end}).pipe(res)
+	}
+}
+
+const server = http.createServer((req, res) => {
+	const {url} = req;
+
+	const paths = {
+	   "/":root,
+	   "/video":video
+	}
+
+	paths[url](req, res)
 })
 
 server.listen(port, hostname, () => {
@@ -45,6 +78,13 @@ function convertKeyPressToAction(keyPressed) {
 		case "KeyA":
 			return { portNumber : "0", position : "0" };
 			break;
+		case "KeyS": 
+			return { portNumber : "1", position : "0" };
+			break;
+		case "KeyW": 
+			return { portNumber : "1", position : "1" };
+			break;
+		
 		default:
 			return null;
 	}

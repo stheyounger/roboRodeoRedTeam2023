@@ -1,0 +1,10 @@
++ whoami
+james
++ ./compileMotorControllerProgram.sh motorControlProgram.cpp
+Compiling motorControlProgram.cpp
++ g++ motorControlProgram.cpp -o motorControlProgram -lwiringPi -lwiringPiPca9685
++ node serverApp.js
++ ./motorControlProgram
+Running motor control program.
++ echo 'I'\''m done - last command exited with 0'
+I'm done - last command exited with 0
