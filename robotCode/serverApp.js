@@ -1,15 +1,14 @@
 const http = require('http')
-const { exec } = require("child_process");
 const fs = require('fs');
 const os = require('os');
 
 const WebSocket = require('ws');
 
+const ffmpeg = require('ffmpeg');
+
 const networkInterfaces = os.networkInterfaces();
 const hostname = networkInterfaces['wlan0'][0]['address']
 const port = 8080
-
-
 
 const root = (req, res)=>{
 	const { headers, method, url } = req;
@@ -27,26 +26,9 @@ const root = (req, res)=>{
 	}
 }
 
-const video = (req, res) => {
-	const { headers, method, url } = req;
-	if (req.method == "GET") {
-		console.log("gettingVideo")
-    		const path = 'video.mp4'
-  		const stat = fs.statSync(path)
-  		const fileSize = stat.size
-  		const head = {
-    			'Content-Length': fileSize,
-    			'Content-Type': 'video/mp4',
-  		}
-  		res.writeHead(200, head)
-		fs.createReadStream(path).pipe(res)
-	}
-}
-
-const wsSite = (req, res) => {
-	const { headers, method, url } = req;
+const favicon = (req, res) => {
 	res.writeHead(200, {'Content-Type': 'text/html'})
-  	fs.createReadStream('webControl.html').pipe(res)
+  	fs.createReadStream('image.png').pipe(res)
 }
 
 const server = http.createServer((req, res) => {
@@ -54,8 +36,7 @@ const server = http.createServer((req, res) => {
 
 	const paths = {
 		"/":root,
-		"/video":video/*,
-		"/ws": wsSite*/
+		"/favicon.ico":favicon
 	}
 
 	paths[url](req, res)
@@ -65,27 +46,37 @@ server.listen(port, hostname, () => {
  	console.log(`Server running at http://`+hostname+`:`+port+`/`)
 })
 
+var NodeWebcam = require( "node-webcam" );
 
 const socket = new WebSocket.Server({ port: 8081 });
-socket.on('connection', (ws) => {
+socket.on('connection', async (ws) => {
 	ws.on('message', (messageAsString) => {
-		//const message = JSON.parse(messageAsString);
-
-		//const outbound = JSON.stringify(message);
 		console.log("recived message: " + messageAsString);
         	ws.send("Wassap it the server");
-		fs.readFile('image.png', (err, data) => {
-        		if (err) throw err; // Fail if the file can't be read. 
-        		ws.send(data.toString('base64')); // Send the file data to the browser.
-    		});   
+		/*fs.readFile('image.png', (err, data) => {
+        		if (err) throw err;
+    		});   */
 	});
 	ws.on("close", () => {
 		console.log("socket closed");
     	});
 
+	while (true) {		
+	NodeWebcam.capture( "my_picture", {frames: 1, delay: 0,output: "png"}, function( err, data ) {
+    		if ( !err ) console.log( "Image created!" );
+		fs.readFile(data, (err, data) => {
+        		ws.send(data.toString('base64'));
+		});
+	});
+	await sleep(1000);
+	}
 	console.log("socket connected");
 });
-
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 function handlePost(data) {
 	if (isJson(data)) {

@@ -11,24 +11,25 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
 </p>
 
 <h3>Status:</h3>
-<video src="/video" width="640px" 
-           controls></video>
 
-<img >
+<img style="width: 100%;">
 
 <script>
 
-	const imageElem = document.getElementsByTagName("img")[0];
 	
 	const socket = new WebSocket('ws://192.168.0.176:8081/')
 	socket.onopen = (event) => {
 		socket.send("Socket opened")
 		console.log("Socket opened");
 	};
+	var isLoadingImage = false
 	socket.onmessage = (event) => {
 		console.log("Server says " + event.data)
-		if (event.data != "Wassap it the server") {
+		if (event.data != "Wassap it the server" && !isLoadingImage) {
+			isLoadingImage = true
+			const imageElem = document.getElementsByTagName("img")[0];
 			imageElem.src = 'data:image/png;base64,' + event.data.toString('base64');
+			isLoadingImage = false
 		}
 	};
 
