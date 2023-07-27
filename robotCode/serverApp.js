@@ -30,7 +30,7 @@ const root = (req, res)=>{
 const video = (req, res) => {
 	const { headers, method, url } = req;
 	if (req.method == "GET") {
-		console.log("we gottem")
+		console.log("gettingVideo")
     		const path = 'video.mp4'
   		const stat = fs.statSync(path)
   		const fileSize = stat.size
@@ -73,7 +73,7 @@ socket.on('connection', (ws) => {
 
 		//const outbound = JSON.stringify(message);
 		console.log("recived message: " + messageAsString);
-        	//ws.send(outbound);
+        	ws.send("Wassap it the server");
     	});
 	ws.on("close", () => {
 		console.log("socket closed");

@@ -18,11 +18,11 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
 
 	const socket = new WebSocket('ws://192.168.0.176:8081/')
 	socket.onopen = (event) => {
-		socket.send("Hey, it's the client")
-		console.log("opened");
+		socket.send("Socket opened")
+		console.log("Socket opened");
 	};
 	socket.onmessage = (event) => {
-		console.log("message " + event.data)
+		console.log("Server says " + event.data)
 	}
 
 
