@@ -14,8 +14,12 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
 <video src="/video" width="640px" 
            controls></video>
 
+<img >
+
 <script>
 
+	const imageElem = document.getElementsByTagName("img")[0];
+	
 	const socket = new WebSocket('ws://192.168.0.176:8081/')
 	socket.onopen = (event) => {
 		socket.send("Socket opened")
@@ -23,7 +27,10 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
 	};
 	socket.onmessage = (event) => {
 		console.log("Server says " + event.data)
-	}
+		if (event.data != "Wassap it the server") {
+			imageElem.src = 'data:image/png;base64,' + event.data.toString('base64');
+		}
+	};
 
 
 	/*(async function() {

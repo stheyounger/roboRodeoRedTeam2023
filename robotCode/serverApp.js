@@ -76,7 +76,7 @@ socket.on('connection', (ws) => {
         	ws.send("Wassap it the server");
 		fs.readFile('image.png', (err, data) => {
         		if (err) throw err; // Fail if the file can't be read. 
-        		ws.send(data); // Send the file data to the browser.
+        		ws.send(data.toString('base64')); // Send the file data to the browser.
     		});   
 	});
 	ws.on("close", () => {
