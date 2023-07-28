@@ -10,6 +10,16 @@
 
 using namespace std;
 
+
+int coerceIn(int value, int min, int max) {
+	if (value > max) {
+		return max;
+	} else if (value < min) {
+		return min;
+	} else {
+		return value;
+	}
+}
 class ServoController {
 	public:
 		const int pinBase = 300;
@@ -47,11 +57,9 @@ class ServoController {
 			int tick = calcTicks(millis);
 			//printf("after tick calc %d\n", tick);
 
-			pwmWrite(pinBase+port, tick);
+			pwmWrite(pinBase+port, coerceIn(tick, 1000, 2000));
 		}
 };
-
-
 
 class MotorCommand {
 	public:
@@ -100,9 +108,15 @@ bool checkForPipeData(char* data) {
 }
 
 void armEsc(int port, ServoController servoCtrl) {
-	servoCtrl.moveServo(port, 0.0f);
-	usleep(2000);
-	servoCtrl.moveServo(port, 0.5f);
+	//servoCtrl.moveServo(port, 0.0f);
+	
+	pwmWrite(300+port, 1500);
+	usleep(2100);
+	pwmWrite(300+port, 000);
+	usleep(2100);
+	pwmWrite(300+port, 1500);
+
+	//servoCtrl.moveServo(port, 0.5f);
 }
 
 
