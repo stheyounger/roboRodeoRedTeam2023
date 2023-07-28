@@ -27,6 +27,7 @@ const root = (req, res)=>{
 }
 
 const favicon = (req, res) => {
+	const { headers, method, url } = req;
 	res.writeHead(200, {'Content-Type': 'text/html'})
   	fs.createReadStream('image.png').pipe(res)
 }
@@ -46,7 +47,7 @@ server.listen(port, hostname, () => {
  	console.log(`Server running at http://`+hostname+`:`+port+`/`)
 })
 
-var NodeWebcam = require( "node-webcam" );
+//var NodeWebcam = require( "node-webcam" );
 
 const socket = new WebSocket.Server({ port: 8081 });
 socket.on('connection', async (ws) => {
@@ -61,7 +62,7 @@ socket.on('connection', async (ws) => {
 		console.log("socket closed");
     	});
 
-	while (true) {		
+	/*while (true) {		
 	NodeWebcam.capture( "my_picture", {frames: 1, delay: 0,output: "png"}, function( err, data ) {
     		if ( !err ) console.log( "Image created!" );
 		fs.readFile(data, (err, data) => {
@@ -69,7 +70,7 @@ socket.on('connection', async (ws) => {
 		});
 	});
 	await sleep(1000);
-	}
+	}*/
 	console.log("socket connected");
 });
 function sleep(ms) {

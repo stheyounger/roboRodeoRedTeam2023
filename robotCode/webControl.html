@@ -16,7 +16,18 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
 
 <script>
 
-	
+/*navigator.getUserMedia(
+ { video: true, audio: true },
+ stream => {
+   const localVideo = document.getElementById("local-video");
+   if (localVideo) {
+     localVideo.srcObject = stream;
+   }
+ },
+ error => {
+   console.warn(error.message);
+ }
+);*/	
 	const socket = new WebSocket('ws://192.168.0.176:8081/')
 	socket.onopen = (event) => {
 		socket.send("Socket opened")
@@ -60,7 +71,7 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
 	document.addEventListener('keydown', (event) => {
  		var name = event.key;
  		var code = event.code;
-		
+		console.log("keyCode " + event.code);	
 		postJson({"keyCode":event.code});
 	}, false);
 

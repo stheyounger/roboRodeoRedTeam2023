@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <cstring>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -98,7 +99,11 @@ bool checkForPipeData(char* data) {
 	}
 }
 
-
+void armEsc(int port, ServoController servoCtrl) {
+	servoCtrl.moveServo(port, 0.0f);
+	usleep(2000);
+	servoCtrl.moveServo(port, 0.5f);
+}
 
 
 int main(int argc, char const* argv[]) {
@@ -106,6 +111,10 @@ int main(int argc, char const* argv[]) {
 
 	ServoController servoCtrl;
 	servoCtrl.setupPwmDriver();
+	
+	armEsc(0, servoCtrl);
+	armEsc(1, servoCtrl);
+
 
   	char* l = NULL;
   	size_t n;
