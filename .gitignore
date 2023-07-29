@@ -1,0 +1,11 @@
+.DS_Store
+kinematicsCoding/kinematicsCoding.iml
+kinematicsCoding/out
+kinematicsCoding/.idea
+vrGame/Library/Bee
+vrGame/Library/StateCache
+vrGame/Library
+vrGame/Logs
+vrGame/Temp
+vrGame/UserSettings/Layouts/default-2022.dwlt
+gitAccessToken.txt

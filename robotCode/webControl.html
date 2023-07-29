@@ -1,0 +1,223 @@
+<h1>Advanced servo control interface below</h1>
+
+<br>
+<h3>Status:</h3>
+
+<img style="width: 100%;">
+
+<script>
+
+/*navigator.getUserMedia(
+ { video: true, audio: true },
+ stream => {
+   const localVideo = document.getElementById("local-video");
+   if (localVideo) {
+     localVideo.srcObject = stream;
+   }
+ },
+ error => {
+   console.warn(error.message);
+ }
+);*/	
+	const socket = new WebSocket('ws://192.168.0.176:8081/')
+	socket.onopen = (event) => {
+		socket.send("Socket opened")
+		console.log("Socket opened");
+	};
+	var isLoadingImage = false
+	socket.onmessage = (event) => {
+		console.log("Server says " + event.data)
+		if (event.data != "Wassap it the server" && !isLoadingImage) {
+			isLoadingImage = true
+			const imageElem = document.getElementsByTagName("img")[0];
+			imageElem.src = 'data:image/png;base64,' + event.data.toString('base64');
+			isLoadingImage = false
+		}
+	};
+
+
+	/*(async function() {
+    		const ws = await connectToServer();
+
+		const messageBody = { "keyCode" : "KeyZ" };
+        	ws.send(JSON.stringify(messageBody));
+
+		ws.onmessage = (webSocketMessage) => {
+        		const messageBody = JSON.parse(webSocketMessage.data);
+    		};
+
+		async function connectToServer() {
+        		const ws = new WebSocket('ws://192.168.0.176:8000/ws');
+        		return new Promise((resolve, reject) => {
+            			const timer = setInterval(() => {
+                			if(ws.readyState === 1) {
+                    				clearInterval(timer)
+                    				resolve(ws);
+                			}
+            			}, 10);
+        		});
+    		}
+	})();*/
+
+
+	window.addEventListener("gamepadconnected", (e) => {
+  		console.log(
+    			"Gamepad connected at index %d: %s. %d buttons, %d axes.",
+    			e.gamepad.index,
+    			e.gamepad.id,
+    			e.gamepad.buttons.length,
+    			e.gamepad.axes.length,
+  		);
+		
+		setTimeout(asyncCall, 10);
+	});
+
+	function coerceIn(value, min, max) {
+		if (value > max) {
+			return max;
+		} else if (value < min) {
+			return min;
+		} else {
+			return value;
+		}
+	}
+
+	const pivotStepSize = 0.1;
+	var frontPivotPos = 0.7;
+	var backPivotPos = 1.0;
+
+
+	function asyncCall() {
+
+		var gamepad = navigator.getGamepads()[0];
+		if(gamepad){
+			gamepad.axes.map((v, idx) => {
+				//postJson({"axis" : idx, "pos": v});
+				console.log(idx + " is " + v);
+			})
+			
+			var pos;
+			const toggle = gamepad.axes[9];
+			switch (toggle) {
+				case -1:
+					console.log("stick up");
+					pos = frontPivotPos - pivotStepSize;
+					frontPivotPos = pos;
+					postJson({"side" : "frontPivot", "pow" : pos});
+					break;
+				case 0.14285719394683838: 
+					console.log("stick down");
+					pos = frontPivotPos + pivotStepSize;
+					frontPivotPos = pos;
+					postJson({"side" : "frontPivot", "pow" : pos});
+					break;
+				case 0.7142857313156128:		
+					console.log("stick side");
+					pos = backPivotPos + pivotStepSize;
+					backPivotPos = pos;
+					postJson({"side" : "backPivot", "pow" : pos});
+					break;
+				case -0.4285714030265808: 
+					console.log("stick otherSdie");
+					pos = backPivotPos - pivotStepSize;
+					backPivotPos = pos;
+					postJson({"side" : "backPivot", "pow" : pos});
+					break;
+			}
+			frontPivotPos = coerceIn(frontPivotPos, 0, 1);
+			backPivotPos = coerceIn(backPivotPos, 0, 1);
+			
+
+			/*const frontPivot = document.getElementById("frontPivotField");
+			frontPivot.addEventListener("keypress", function(event) {
+  				if (event.key === "Enter") {
+    					event.preventDefault();
+					postJson({"side" : "frontPivot", "pow" : this.value});
+  				}
+			});
+			const backPivot = document.getElementById("backPivotField");
+			backPivot.addEventListener("keypress", function(event) {
+  				if (event.key === "Enter") {
+    					event.preventDefault();
+					postJson({"side" : "backPivot", "pow" : this.value});
+  				}
+			});*/
+
+			const throttleKnob = gamepad.axes[3];
+			const forwardStick = gamepad.axes[0];
+			const sideStick = gamepad.axes[1];
+
+			console.log("throttle: " + throttleKnob + ", forwardStick: " + forwardStick + ", sideStick: " + sideStick); 
+
+			const throttle = ((-throttleKnob) + 1) * 0.5;
+
+			const leftPower = (forwardStick - sideStick) * throttle;
+			const rightPower = (forwardStick + sideStick) * throttle;
+			console.log("leftPower: " + leftPower + " rightPower: " + rightPower);
+			postJson({"side" : "left", "pow": leftPower});
+			postJson({"side" : "right", "pow": rightPower});
+			/*gamepad.buttons.map((b, idx)=>{
+				postJson({"button" : idx, "val": b});
+				//console.log("Button " + idx + " " + b.value + " pressed? " + b.pressed)
+			})*/
+		}
+
+		setTimeout(asyncCall, 100);
+
+	}
+
+
+	/*const slider = document.getElementById("powerSlider");
+	const field = document.getElementById("powerField");
+	slider.oninput = function() {		
+			postJson({"keyCode" : this.value});
+			console.log("just sent " + this.value + " to the server");
+  	};
+	field.addEventListener("keypress", function(event) {
+  		if (event.key === "Enter") {
+    			event.preventDefault();
+			postJson({"keyCode" : this.value});
+			console.log("just sent " + this.value + " to the server");
+  		}
+		
+	});
+	document.addEventListener('keydown', (event) => {
+ 		var name = event.key;
+ 		var code = event.code;
+		console.log("keyCode " + event.code);	
+		postJson({"keyCode":event.code});
+	}, false);*/
+
+
+	var sending;
+	var latest;
+ 
+	const http = new XMLHttpRequest();
+
+	function postJson(jsonObject) {
+		if(sending){
+			console.log("Hey, looks like something is in-progress.  Just gonna ignore this", jsonObject)
+			latest = jsonObject
+		}else{
+			sending = jsonObject
+		
+			http.open("POST", "", true);
+	
+			http.setRequestHeader("Content-type", "application/json");
+	
+			http.onload = () => {
+				sending = undefined;
+				const next = latest
+				latest = undefined
+				if(next){
+					postJson(next)
+				}
+				console.log("done sending")
+			};
+	
+			const stringified = JSON.stringify(jsonObject)
+                	console.log("Posting json: " + stringified);
+			http.send(stringified);
+		}
+	}
+</script>
