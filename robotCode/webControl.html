@@ -81,7 +81,6 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
     			e.gamepad.buttons.length,
     			e.gamepad.axes.length,
   		);
-		//gamepad = navigator.getGamepads().find(gamepad => {gamepad !== null});
 		
 		setTimeout(asyncCall, 10);
 	});
@@ -90,23 +89,24 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
 
 		var gamepad = navigator.getGamepads()[0];
 		if(gamepad){
-			gamepad.axes.map((v, idx) => {
-				console.log(idx + " is " + v);
-			})
-			gamepad.buttons.map((b, idx)=>{
-				console.log("Button " + idx + " " + b.value + " pressed? " + b.pressed)
-			})
+			/*gamepad.axes.map((v, idx) => {
+				postJson({"axis" : idx, "pos": v});
+				//console.log(idx + " is " + v);
+			})*/
+			postJson({"axis" : 0, "pos": gamepad.axes[0]});
+			postJson({"axis" : 1, "pos": gamepad.axes[1]});
+			/*gamepad.buttons.map((b, idx)=>{
+				postJson({"button" : idx, "val": b});
+				//console.log("Button " + idx + " " + b.value + " pressed? " + b.pressed)
+			})*/
 		}
 
-		//console.log("still moving");
 		setTimeout(asyncCall, 100);
 
-		//window.requestAnimationFrame(asyncCall);
 	}
-	//window.requestAnimationFrame(asyncCall);
 
 
-	const slider = document.getElementById("powerSlider");
+	/*const slider = document.getElementById("powerSlider");
 	const field = document.getElementById("powerField");
 	slider.oninput = function() {		
 			postJson({"keyCode" : this.value});
@@ -125,7 +125,7 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
  		var code = event.code;
 		console.log("keyCode " + event.code);	
 		postJson({"keyCode":event.code});
-	}, false);
+	}, false);*/
 
 
 	var sending;

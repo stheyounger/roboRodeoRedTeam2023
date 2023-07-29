@@ -19,7 +19,7 @@ const root = (req, res)=>{
 			res.writeHead(200, {'Content-Type': 'text/plain'})
 			res.end("yup")
 
-			console.log("Server recived: " + data);
+			//console.log("Server recived: " + data);
 			handlePost(data)
 		})
   	} else if (req.method == "GET") {
@@ -85,24 +85,36 @@ function handlePost(data) {
 	if (isJson(data)) {
 		parsedData = JSON.parse(data);
 
-		console.log("data.keyCode " + parsedData.keyCode);
+		//console.log("data.keyCode " + parsedData.keyCode);
 
-		sendDataToMotorController(convertKeyPressToAction(parsedData.keyCode))
+		sendDataToMotorController(convertKeyPressToAction(parsedData))
 	}
 }
 function isFloat(n){
     return Number(n) === n && n % 1 !== 0;
 }
 
+function convertJoystickToPower(value) {
+	return (value + 1) / 2;
+}
 
 const powerStep = 0.05;
 var leftPower = 0.5;
 var rightPower = 0.5;
 var power = null;
 
-function convertKeyPressToAction(keyPressed) {
-	switch (keyPressed) {
-		case "KeyQ":
+function convertKeyPressToAction(gamepadAction) {
+	console.log("gamepadAction " + gamepadAction.axis);
+	switch (gamepadAction.axis) {
+		case 0: 
+			console.log("yo");
+			return { portNumber : "0", position : convertJoystickToPower(gamepadAction.pos) };
+			break;
+		case 1:
+			console.log("hi");
+			return { portNumber : "1", position : convertJoystickToPower(gamepadAction.pos) };
+			break;
+		/*case "KeyQ":
 			power = leftPower + powerStep;
 			leftPower = power;
 			return { portNumber : "0", position : power };
@@ -121,13 +133,14 @@ function convertKeyPressToAction(keyPressed) {
 			power = rightPower - powerStep;
 			rightPower = power;
 			return { portNumber : "1", position : power };
-			break;
+			break;*/
 		default:
-			if (isFloat(parseFloat(keyPressed))) {
+			/*if (isFloat(parseFloat(keyPressed))) {
 				return { portNumber: "0", position: parseFloat(keyPressed) };
-			} else {
-				return null;
-			}
+			} else {*/
+
+			return null;
+			//}
 	}
 }
 
