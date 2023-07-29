@@ -66,7 +66,6 @@ void empty() {
 }
 
 
-const int pinBase = 300;
 const int maxPwm = 4096;
 const int hertz = 50;
 
@@ -91,7 +90,7 @@ void moveServo(int servoNum, float position, int fd){
 int main(int argc, char const* argv[]) {
 	printf("Running motor control program.\n");
 	printf("Connecting to the servo board via i2c...\n");	
-	int fd = pca9685Setup(pinBase, 0x40, hertz);
+	int fd = pca9685Setup(300, 0x40, hertz);
 	
 	printf("Connected - fd: %d\n", fd);
 	if (fd < 0) {
@@ -105,14 +104,14 @@ int main(int argc, char const* argv[]) {
 	//float speed  = 0.05;
 
 
-	for(int port = 0; port <= 0; port++){
+	/*for(int port = 0; port <= 0; port++){
 		moveServo(port, 0.5, fd);
 	}
 	sleep(1);
 	for(int port = 0; port <= 0; port++){
 		moveServo(port, 0.45, fd);
-	}
-/*
+	}*/
+
 	char* l = NULL;
   	size_t n;
 	while (getline(&l,&n, stdin) != -1 ) {
@@ -123,11 +122,11 @@ int main(int argc, char const* argv[]) {
 
 			printf("hi hi hi motorCmd: %i, %f\n", motorCmd.portNumber, motorCmd.position);
 
-			moveServo(0, motorCmd.position, fd);
-			//moveServo(motorCmd.portNumber, motorCmd.position, fd);
+			//moveServo(0, motorCmd.position, fd);
+			moveServo(motorCmd.portNumber, motorCmd.position, fd);
 		}
 
-    	}*/
+    	}
 
 	return 0;
 }

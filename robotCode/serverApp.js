@@ -95,20 +95,32 @@ function isFloat(n){
 }
 
 
+const powerStep = 0.05;
+var leftPower = 0.5;
+var rightPower = 0.5;
+var power = null;
 
 function convertKeyPressToAction(keyPressed) {
 	switch (keyPressed) {
 		case "KeyQ":
-			return { portNumber : "0", position : 0.0 };
+			power = leftPower + powerStep;
+			leftPower = power;
+			return { portNumber : "0", position : power };
 			break;
 		case "KeyA":
-			return { portNumber : "0", position : 1.0 };
+			power = leftPower - powerStep;
+			leftPower = power;
+			return { portNumber : "0", position : power };
 			break;
 		case "KeyS": 
-			return { portNumber : "1", position : 1.0 };
+			power = rightPower + powerStep;
+			rightPower = power;
+			return { portNumber : "1", position : power };
 			break;
 		case "KeyW": 
-			return { portNumber : "1", position : 0.0 };
+			power = rightPower - powerStep;
+			rightPower = power;
+			return { portNumber : "1", position : power };
 			break;
 		default:
 			if (isFloat(parseFloat(keyPressed))) {
