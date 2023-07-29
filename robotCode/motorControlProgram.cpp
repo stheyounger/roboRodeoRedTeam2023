@@ -83,7 +83,7 @@ void moveServo(int servoNum, float position, int fd){
 	float full = 2.0;
 	float travel = full - zero;
 	float millis = zero + (position * travel);
-	pca9685PWMWrite(fd, pinBase + port, 0, calcTicks(millis, hertz, maxPwm));
+	pca9685PWMWrite(fd, port, 0, calcTicks(millis, hertz, maxPwm));
 	printf("Sent it\n");
 }
 
@@ -105,14 +105,14 @@ int main(int argc, char const* argv[]) {
 	//float speed  = 0.05;
 
 
-	/*for(int port = 0; port <= 15; port++){
+	for(int port = 0; port <= 0; port++){
 		moveServo(port, 0.5, fd);
 	}
 	sleep(1);
-	for(int port = 0; port <= 15; port++){
+	for(int port = 0; port <= 0; port++){
 		moveServo(port, 0.45, fd);
-	}*/
-
+	}
+/*
 	char* l = NULL;
   	size_t n;
 	while (getline(&l,&n, stdin) != -1 ) {
@@ -121,12 +121,13 @@ int main(int argc, char const* argv[]) {
 		if (checkForPipeData(l)) {
 			MotorCommand motorCmd = pipeDataToMotorCommand(l);
 
-			printf("motorCmd: %i, %f\n", motorCmd.portNumber, motorCmd.position);
+			printf("hi hi hi motorCmd: %i, %f\n", motorCmd.portNumber, motorCmd.position);
 
-			moveServo(motorCmd.portNumber, motorCmd.position, fd);
+			moveServo(0, motorCmd.position, fd);
+			//moveServo(motorCmd.portNumber, motorCmd.position, fd);
 		}
 
-    	}
+    	}*/
 
 	return 0;
 }
