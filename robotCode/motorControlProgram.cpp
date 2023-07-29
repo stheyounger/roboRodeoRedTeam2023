@@ -20,7 +20,7 @@ int coerceIn(int value, int min, int max) {
 		return value;
 	}
 }
-class ServoController {
+class PwmController {
 	public:
 		const int pinBase = 300;
 		const int maxPwm = 4096;
@@ -39,25 +39,28 @@ class ServoController {
 
 			// Setup with pinbase 300 and i2c location 0x40
 			int fd = pca9685Setup(pinBase, 0x40, hertz);
+			printf("fd: %d\n", fd);
 			if (fd < 0) {
 				printf("Error in setup\n");
 				return fd;
 			}
-			
+				
+
 			pca9685PWMReset(fd);
+			//pwmSetMode(PWM_MODE_MS);
 
 			return 0;
 		}
 		void moveServo(int port, float milis) {
-			//printf("position in %f\n", milis);
+			printf("position in %f\n", milis);
 
 			float millis = map(milis, 1, 2);
 			//printf("after map %f\n", millis);
 		
 			int tick = calcTicks(millis);
-			//printf("after tick calc %d\n", tick);
+			printf("after tick calc %d\n", tick);
 
-			pwmWrite(pinBase+port, coerceIn(tick, 1000, 2000));
+			pwmWrite(pinBase+port, milis);//coerceIn(tick, 1000, 2000));
 		}
 };
 
@@ -107,13 +110,13 @@ bool checkForPipeData(char* data) {
 	}
 }
 
-void armEsc(int port, ServoController servoCtrl) {
+void armEsc(int port, PwmController servoCtrl) {
 	//servoCtrl.moveServo(port, 0.0f);
 	
-	pwmWrite(300+port, 1500);
-	usleep(2100);
-	pwmWrite(300+port, 000);
-	usleep(2100);
+	pwmWrite(300+port, 500);
+	//usleep(2100);
+	pwmWrite(300+port, 1000);
+	//usleep(100);
 	pwmWrite(300+port, 1500);
 
 	//servoCtrl.moveServo(port, 0.5f);
@@ -123,11 +126,14 @@ void armEsc(int port, ServoController servoCtrl) {
 int main(int argc, char const* argv[]) {
 	printf("Running motor control program.\n");
 
-	ServoController servoCtrl;
+	PwmController servoCtrl;
 	servoCtrl.setupPwmDriver();
-	
-	armEsc(0, servoCtrl);
-	armEsc(1, servoCtrl);
+	printf("after setup, before move\n");	
+	/*armEsc(0, servoCtrl);
+	armEsc(1, servoCtrl);*/
+	servoCtrl.moveServo(0, 00);
+	usleep(1000);
+	servoCtrl.moveServo(0, 1500);
 
 
   	char* l = NULL;
@@ -143,7 +149,7 @@ int main(int argc, char const* argv[]) {
 			printf("motorCmd: %i, %f\n", motorCmd.portNumber, motorCmd.position);
 
 			servoCtrl.moveServo(motorCmd.portNumber, motorCmd.position);
-		}	
+		}
 
     	}
 

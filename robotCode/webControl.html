@@ -10,6 +10,10 @@ Front pivot: Up-Arrow pivot down, Down-Arrow pivot up
 Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
 </p>
 
+
+<input type="range" id="powerSlider" min="0", max="4000", value="0">
+<input type="number" id="powerField" value="0">
+
 <h3>Status:</h3>
 
 <img style="width: 100%;">
@@ -68,6 +72,20 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
     		}
 	})();*/
 
+	const slider = document.getElementById("powerSlider");
+	const field = document.getElementById("powerField");
+	slider.oninput = function() {		
+			postJson({"keyCode" : this.value});
+			console.log("just sent " + this.value + " to the server");
+  	};
+	field.addEventListener("keypress", function(event) {
+  		if (event.key === "Enter") {
+    			event.preventDefault();
+			postJson({"keyCode" : this.value});
+			console.log("just sent " + this.value + " to the server");
+  		}
+		
+	});
 	document.addEventListener('keydown', (event) => {
  		var name = event.key;
  		var code = event.code;

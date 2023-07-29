@@ -6,5 +6,11 @@ Compiling motorControlProgram.cpp
 + node serverApp.js
 + ./motorControlProgram
 Running motor control program.
+fd: 4
+after setup, before move
+position in 0.000000
+after tick calc 205
+position in 1500.000000
+after tick calc 307405
 + echo 'I'\''m done - last command exited with 0'
 I'm done - last command exited with 0

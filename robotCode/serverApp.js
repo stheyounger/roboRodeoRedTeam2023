@@ -10,6 +10,8 @@ const networkInterfaces = os.networkInterfaces();
 const hostname = networkInterfaces['wlan0'][0]['address']
 const port = 8080
 
+console.log("Server program has started");
+
 const root = (req, res)=>{
 	const { headers, method, url } = req;
 	if (req.method == 'POST') {
@@ -101,16 +103,18 @@ function convertKeyPressToAction(keyPressed) {
 			return { portNumber : "1", position : "0" };
 			break;
 		case "KeyW": 
-			return { portNumber : "1", position : "1" };
+			return { portNumber : "1", position : "1000" };
 			break;
-		
 		default:
-			return null;
+			if (Number.isInteger(parseInt(keyPressed))) {
+				return { portNumber: "0", position: parseInt(keyPressed) };
+			} else {
+				return null;
+			}
 	}
 }
 
-function sendDataToMotorController(data) {
-	
+function sendDataToMotorController(data) {	
 	if (data != null) {
 		const pipeData = "pipeData " + data.portNumber + " " + data.position
 		console.log(pipeData)

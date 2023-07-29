@@ -151,21 +151,28 @@ int main(int argc, char const* argv[]) {
 	float target = 0.0;
 	pca9685PWMFreq(fd, hertz);
 	pca9685PWMReset(fd);
-	float step = 0.1;
-	while(1){
-	
-		int port = 0;
-		for(port = 0; port <= 15; port++){
-			moveServo(port, target, fd);
-		}
-		sleep(1);
- 		target = target + step;
-		if(target>1.0){
-		   target = 0.0;	
-		}
+	float speed  = 0.05;
+
+	for(int port = 0; port <= 15; port++){
+		moveServo(port, 0.5, fd);
+	}
+	sleep(1);
+	for(int port = 0; port <= 15; port++){
+		moveServo(port, 0.5 - speed, fd);
+	}
+	sleep(5);
+	for(int port = 0; port <= 15; port++){
+		moveServo(port, 0.5, fd);
+	}
+	sleep(3);
+	for(int port = 0; port <= 15; port++){
+		moveServo(port, 0.5 + speed, fd);
+	}
+	sleep(5);
+	for(int port = 0; port <= 15; port++){
+		moveServo(port, 0.5, fd);
 	}
 
-	sleep(100);
 	printf("Exiting\n");
 	//pwmWrite(pinBase+port, 0.0);//coerceIn(tick, 1000, 2000));
 			
