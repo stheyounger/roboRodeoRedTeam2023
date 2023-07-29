@@ -72,6 +72,33 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
     		}
 	})();*/
 
+
+	window.addEventListener("gamepadconnected", (e) => {
+  		console.log(
+    			"Gamepad connected at index %d: %s. %d buttons, %d axes.",
+    			e.gamepad.index,
+    			e.gamepad.id,
+    			e.gamepad.buttons.length,
+    			e.gamepad.axes.length,
+  		);
+		//gamepad = navigator.getGamepads().find(gamepad => {gamepad !== null});
+			
+
+	});
+
+	function asyncCall() {
+
+		var gamepad = navigator.getGamepads().find(gamepad => {gamepad !== null});
+		if (typeof gamepad !== 'undefined') {
+			const position = gamepad.axes[0];
+			console.log( "pos " + position);
+		}
+		console.log("still moving");
+		//window.requestAnimationFrame(asyncCall);
+	}
+	//window.requestAnimationFrame(asyncCall);
+
+
 	const slider = document.getElementById("powerSlider");
 	const field = document.getElementById("powerField");
 	slider.oninput = function() {		

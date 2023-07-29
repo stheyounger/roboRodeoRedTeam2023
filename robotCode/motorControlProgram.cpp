@@ -65,6 +65,15 @@ void empty() {
 			wiringPiSetup();
 }
 
+float coerceIn(float value, float min, float max) {
+	if (value < min) {
+		return min;
+	} else if (value > max) {
+		return max;
+	} else {
+		return value;
+	}
+}
 
 const int maxPwm = 4096;
 const int hertz = 50;
@@ -81,7 +90,8 @@ void moveServo(int servoNum, float position, int fd){
 	float zero = 1.1;
 	float full = 2.0;
 	float travel = full - zero;
-	float millis = zero + (position * travel);
+	float boundedPosition = coerceIn(position, 0.0, 1.0);
+	float millis = zero + (boundedPosition * travel);
 	pca9685PWMWrite(fd, port, 0, calcTicks(millis, hertz, maxPwm));
 	printf("Sent it\n");
 }
