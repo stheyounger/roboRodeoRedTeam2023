@@ -82,18 +82,25 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
     			e.gamepad.axes.length,
   		);
 		//gamepad = navigator.getGamepads().find(gamepad => {gamepad !== null});
-			
-
+		
+		setTimeout(asyncCall, 10);
 	});
 
 	function asyncCall() {
 
-		var gamepad = navigator.getGamepads().find(gamepad => {gamepad !== null});
-		if (typeof gamepad !== 'undefined') {
-			const position = gamepad.axes[0];
-			console.log( "pos " + position);
+		var gamepad = navigator.getGamepads()[0];
+		if(gamepad){
+			gamepad.axes.map((v, idx) => {
+				console.log(idx + " is " + v);
+			})
+			gamepad.buttons.map((b, idx)=>{
+				console.log("Button " + idx + " " + b.value + " pressed? " + b.pressed)
+			})
 		}
-		console.log("still moving");
+
+		//console.log("still moving");
+		setTimeout(asyncCall, 100);
+
 		//window.requestAnimationFrame(asyncCall);
 	}
 	//window.requestAnimationFrame(asyncCall);
