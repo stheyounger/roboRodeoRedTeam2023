@@ -113,17 +113,30 @@ void armEsc(int port, PwmController servoCtrl) {
 	//servoCtrl.moveServo(port, 0.5f);
 }
 
+const int pinBase = 300;
+const int maxPwm = 4096;
+const int hertz = 50;
+
 int calcTicks(float impulseMs, int hertz, int MAX_PWM)
 {
 	float cycleMs = 1000.0f / hertz;
 	return (int)(MAX_PWM * impulseMs / cycleMs + 0.5f);
 }
 
+void moveServo(int servoNum, float position, int fd){
+	int port = servoNum;
+	printf("Sending to port %d\n", port);
+		//pca9685FullOn(fd, 0, 1);
+	float zero = 1.1;
+	float full = 2.0;
+	float travel = full - zero;
+	float millis = zero + (position * travel);
+	pca9685PWMWrite(fd, pinBase + port, 0, calcTicks(millis, hertz, maxPwm));
+	printf("Sent it\n");
+}
+
 int main(int argc, char const* argv[]) {
 	printf("Running motor control program.\n");
-	const int pinBase = 300;
-	const int maxPwm = 4096;
-	const int hertz = 50;
 			//wiringPiSetup();
 
 			// Setup with pinbase 300 and i2c location 0x40
@@ -135,67 +148,26 @@ int main(int argc, char const* argv[]) {
 		return fd;
 	}
 
-/*	
-       wiringPiSetup(); 
-       for(int port = 0; port <=15; port++){
-           printf("Sending to port %d\n", port);
-
-           pwmWrite(pinBase + port, 2000.0);
-       }
-       sleep(5);
-       for(int port = 0; port <=15; port++){
-           printf("Sending to port %d\n", port);
-
-           pwmWrite(pinBase + port, 0.0);
-       }
-
-
-*/
-	float target = 1.0;
+	float target = 0.0;
 	pca9685PWMFreq(fd, hertz);
 	pca9685PWMReset(fd);
-	int port = 0;
-	for(port = 0; port <= 15; port++){
-		printf("Sending to port %d\n", port);
-		//pca9685FullOn(fd, 0, 1);
-		float zero = 1.0;
-		float full = 2.0;
-		float millis = zero + target;
-		pca9685PWMWrite(fd, pinBase + port, 0, calcTicks(millis, hertz, maxPwm));
-   		printf("Sent it\n");
+	float step = 0.1;
+	while(1){
+	
+		int port = 0;
+		for(port = 0; port <= 15; port++){
+			moveServo(port, target, fd);
+		}
+		sleep(1);
+ 		target = target + step;
+		if(target>1.0){
+		   target = 0.0;	
+		}
 	}
 
 	sleep(100);
 	printf("Exiting\n");
-			//pwmWrite(pinBase+port, 0.0);//coerceIn(tick, 1000, 2000));
+	//pwmWrite(pinBase+port, 0.0);//coerceIn(tick, 1000, 2000));
 			
-			/*
- *
-	PwmController servoCtrl;
-	servoCtrl.setupPwmDriver();
-	printf("after setup, before move\n");	
-	servoCtrl.moveServo(0, 00);
-	usleep(1000);
-	servoCtrl.moveServo(0, 1500);
-
-
-  	char* l = NULL;
-  	size_t n;
-	while (getline(&l,&n, stdin) != -1 ) {
-      		printf("MotorCtrl <- stdin: %s\n",l);
-
-		if (checkForPipeData(l)) {
-			printf("Pipe Data: %s\n", l);
-
-			MotorCommand motorCmd = pipeDataToMotorCommand(l);
-
-			printf("motorCmd: %i, %f\n", motorCmd.portNumber, motorCmd.position);
-
-			servoCtrl.moveServo(motorCmd.portNumber, motorCmd.position);
-		}
-
-    	}
-
-*/
 	return 0;
 }
