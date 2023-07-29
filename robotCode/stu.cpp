@@ -151,7 +151,7 @@ int main(int argc, char const* argv[]) {
 	float target = 0.0;
 	pca9685PWMFreq(fd, hertz);
 	pca9685PWMReset(fd);
-	float speed  = 0.05;
+	float speed  = 0.5;
 
 	for(int port = 0; port <= 15; port++){
 		moveServo(port, 0.5, fd);

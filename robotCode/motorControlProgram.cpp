@@ -1,3 +1,4 @@
+
 #include "pca9685.h"
 #include <wiringPi.h>
 
@@ -8,61 +9,9 @@
 #include <iostream>
 #include <unistd.h>
 
+
 using namespace std;
 
-
-int coerceIn(int value, int min, int max) {
-	if (value > max) {
-		return max;
-	} else if (value < min) {
-		return min;
-	} else {
-		return value;
-	}
-}
-class PwmController {
-	public:
-		const int pinBase = 300;
-		const int maxPwm = 4096;
-		const int hertz = 50;
-	private: 
-		int calcTicks(float impulseMs) {
-			float cycleMs = 1000.0f / hertz;
-			return (int)(maxPwm * impulseMs / cycleMs + 0.5f);
-		}
-		float map(float input, float min, float max) {
-			return (input * max) + (1 - input) * min;
-		}
-	public:
-		int setupPwmDriver() {
-			wiringPiSetup();
-
-			// Setup with pinbase 300 and i2c location 0x40
-			int fd = pca9685Setup(pinBase, 0x40, hertz);
-			printf("fd: %d\n", fd);
-			if (fd < 0) {
-				printf("Error in setup\n");
-				return fd;
-			}
-				
-
-			pca9685PWMReset(fd);
-			//pwmSetMode(PWM_MODE_MS);
-
-			return 0;
-		}
-		void moveServo(int port, float milis) {
-			printf("position in %f\n", milis);
-
-			float millis = map(milis, 1, 2);
-			//printf("after map %f\n", millis);
-		
-			int tick = calcTicks(millis);
-			printf("after tick calc %d\n", tick);
-
-			pwmWrite(pinBase+port, milis);//coerceIn(tick, 1000, 2000));
-		}
-};
 
 class MotorCommand {
 	public:
@@ -110,49 +59,75 @@ bool checkForPipeData(char* data) {
 	}
 }
 
-void armEsc(int port, PwmController servoCtrl) {
-	//servoCtrl.moveServo(port, 0.0f);
-	
-	pwmWrite(300+port, 500);
-	//usleep(2100);
-	pwmWrite(300+port, 1000);
-	//usleep(100);
-	pwmWrite(300+port, 1500);
+void empty() {
 
-	//servoCtrl.moveServo(port, 0.5f);
+
+			wiringPiSetup();
+}
+
+
+const int pinBase = 300;
+const int maxPwm = 4096;
+const int hertz = 50;
+
+int calcTicks(float impulseMs, int hertz, int MAX_PWM)
+{
+	float cycleMs = 1000.0f / hertz;
+	return (int)(MAX_PWM * impulseMs / cycleMs + 0.5f);
+}
+
+void moveServo(int servoNum, float position, int fd){
+	int port = servoNum;
+	printf("Sending to port %d\n", port);
+	float zero = 1.1;
+	float full = 2.0;
+	float travel = full - zero;
+	float millis = zero + (position * travel);
+	pca9685PWMWrite(fd, pinBase + port, 0, calcTicks(millis, hertz, maxPwm));
+	printf("Sent it\n");
 }
 
 
 int main(int argc, char const* argv[]) {
 	printf("Running motor control program.\n");
+	printf("Connecting to the servo board via i2c...\n");	
+	int fd = pca9685Setup(pinBase, 0x40, hertz);
+	
+	printf("Connected - fd: %d\n", fd);
+	if (fd < 0) {
+		printf("Error in setup\n");
+		return fd;
+	}
 
-	PwmController servoCtrl;
-	servoCtrl.setupPwmDriver();
-	printf("after setup, before move\n");	
-	/*armEsc(0, servoCtrl);
-	armEsc(1, servoCtrl);*/
-	servoCtrl.moveServo(0, 00);
-	usleep(1000);
-	servoCtrl.moveServo(0, 1500);
+	//float target = 0.0;
+	pca9685PWMFreq(fd, hertz);
+	pca9685PWMReset(fd);
+	//float speed  = 0.05;
 
 
-  	char* l = NULL;
+	/*for(int port = 0; port <= 15; port++){
+		moveServo(port, 0.5, fd);
+	}
+	sleep(1);
+	for(int port = 0; port <= 15; port++){
+		moveServo(port, 0.45, fd);
+	}*/
+
+	char* l = NULL;
   	size_t n;
 	while (getline(&l,&n, stdin) != -1 ) {
       		printf("MotorCtrl <- stdin: %s\n",l);
 
 		if (checkForPipeData(l)) {
-			printf("Pipe Data: %s\n", l);
-
 			MotorCommand motorCmd = pipeDataToMotorCommand(l);
 
 			printf("motorCmd: %i, %f\n", motorCmd.portNumber, motorCmd.position);
 
-			servoCtrl.moveServo(motorCmd.portNumber, motorCmd.position);
+			moveServo(motorCmd.portNumber, motorCmd.position, fd);
 		}
 
     	}
 
-
 	return 0;
 }
+

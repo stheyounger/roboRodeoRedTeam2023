@@ -90,24 +90,29 @@ function handlePost(data) {
 		sendDataToMotorController(convertKeyPressToAction(parsedData.keyCode))
 	}
 }
+function isFloat(n){
+    return Number(n) === n && n % 1 !== 0;
+}
+
+
 
 function convertKeyPressToAction(keyPressed) {
 	switch (keyPressed) {
 		case "KeyQ":
-			return { portNumber : "0", position : "1" };
+			return { portNumber : "0", position : 0.0 };
 			break;
 		case "KeyA":
-			return { portNumber : "0", position : "0" };
+			return { portNumber : "0", position : 1.0 };
 			break;
 		case "KeyS": 
-			return { portNumber : "1", position : "0" };
+			return { portNumber : "1", position : 1.0 };
 			break;
 		case "KeyW": 
-			return { portNumber : "1", position : "1000" };
+			return { portNumber : "1", position : 0.0 };
 			break;
 		default:
-			if (Number.isInteger(parseInt(keyPressed))) {
-				return { portNumber: "0", position: parseInt(keyPressed) };
+			if (isFloat(parseFloat(keyPressed))) {
+				return { portNumber: "0", position: parseFloat(keyPressed) };
 			} else {
 				return null;
 			}
