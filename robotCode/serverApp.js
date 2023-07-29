@@ -98,13 +98,17 @@ function convertJoystickToPower(value) {
 	return (value + 1) / 2;
 }
 
-const powerStep = 0.05;
-var leftPower = 0.5;
-var rightPower = 0.5;
-var power = null;
+var forward = 0.5;
+var turn = 0.0;
 
 function convertKeyPressToAction(gamepadAction) {
 	console.log("gamepadAction " + gamepadAction.axis);
+	
+
+
+	return { portNumber : "0", position : convertJoystickToPower(gamepadAction.pos) };
+	return { portNumber : "0", position : convertJoystickToPower(gamepadAction.pos) };
+
 	switch (gamepadAction.axis) {
 		case 0: 
 			console.log("yo");
@@ -114,33 +118,8 @@ function convertKeyPressToAction(gamepadAction) {
 			console.log("hi");
 			return { portNumber : "1", position : convertJoystickToPower(gamepadAction.pos) };
 			break;
-		/*case "KeyQ":
-			power = leftPower + powerStep;
-			leftPower = power;
-			return { portNumber : "0", position : power };
-			break;
-		case "KeyA":
-			power = leftPower - powerStep;
-			leftPower = power;
-			return { portNumber : "0", position : power };
-			break;
-		case "KeyS": 
-			power = rightPower + powerStep;
-			rightPower = power;
-			return { portNumber : "1", position : power };
-			break;
-		case "KeyW": 
-			power = rightPower - powerStep;
-			rightPower = power;
-			return { portNumber : "1", position : power };
-			break;*/
 		default:
-			/*if (isFloat(parseFloat(keyPressed))) {
-				return { portNumber: "0", position: parseFloat(keyPressed) };
-			} else {*/
-
 			return null;
-			//}
 	}
 }
 
