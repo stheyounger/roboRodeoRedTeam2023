@@ -2,6 +2,11 @@
 #include "pca9685.h"
 #include <wiringPi.h>
 
+#include <linux/videodev2.h>
+#include <fcntl.h> 
+#include <sys/mman.h>
+#include <sys/ioctl.h>
+
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,8 +101,67 @@ void moveServo(int servoNum, float position, int fd){
 	printf("Sent it\n");
 }
 
+void camera() {
+
+	int fdCam;
+    	if((fdCam = open("/dev/video0", O_RDWR)) < 0){
+        	perror("open");
+		printf("error happened fd: %d\n", fdCam);
+        	//exit(1);
+    	}
+	printf("nah fd: %d\n", fdCam);
+
+	struct v4l2_format format;
+  	format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    	format.fmt.pix.pixelformat = V4L2_PIX_FMT_JPEG;
+    	format.fmt.pix.width = 2592;
+    	format.fmt.pix.height = 1944;
+
+	struct v4l2_requestbuffers bufrequest;
+    	bufrequest.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    	bufrequest.memory = V4L2_MEMORY_MMAP;
+    	bufrequest.count = 1;
+
+	struct v4l2_buffer bufferinfo;
+    	memset(&bufferinfo, 0, sizeof(bufferinfo));
+
+    	bufferinfo.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    	bufferinfo.memory = V4L2_MEMORY_MMAP;
+    	bufferinfo.index = 0;
+
+	void* buffer_start = mmap(
+                NULL,
+                bufferinfo.length,
+                PROT_READ | PROT_WRITE,
+                MAP_SHARED,
+                fdCam,
+                bufferinfo.m.offset
+                );
+
+    	if(buffer_start == MAP_FAILED){
+        	perror("mmap");
+		printf("looks like map failed\n");
+        	//exit(1);
+    	}
+
+    	memset(buffer_start, 0, bufferinfo.length);
+
+    	// Activate streaming
+    	int type = bufferinfo.type;
+    	if(ioctl(fdCam, VIDIOC_STREAMON, &type) < 0){
+        	perror("VIDIOC_STREAMON");
+		printf("streaming phone\n");
+        	//exit(1);
+    	}
+
+
+}
+
 
 int main(int argc, char const* argv[]) {
+	camera();
+
+
 	printf("Running motor control program.\n");
 	printf("Connecting to the servo board via i2c...\n");	
 	int fd = pca9685Setup(300, 0x40, hertz);
