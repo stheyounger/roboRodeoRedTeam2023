@@ -1,19 +1,6 @@
 <h1>Advanced servo control interface below</h1>
 
 <br>
-<h3>Keybinds:</h3>
-<p>
-Left side: Q forward, A backward
-Right side: W forward, S backward
-
-Front pivot: Up-Arrow pivot down, Down-Arrow pivot up
-Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
-</p>
-
-
-<input type="range" id="powerSlider" min="0", max="4000", value="0">
-<input type="number" id="powerField" value="0">
-
 <h3>Status:</h3>
 
 <img style="width: 100%;">
@@ -85,16 +72,93 @@ Back pivot: Left-Arrow pivot up, Right-Arrow pivot down
 		setTimeout(asyncCall, 10);
 	});
 
+	function coerceIn(value, min, max) {
+		if (value > max) {
+			return max;
+		} else if (value < min) {
+			return min;
+		} else {
+			return value;
+		}
+	}
+
+	const pivotStepSize = 0.1;
+	var frontPivotPos = 0.5;
+	var backPivotPos = 0.5;
+
+
 	function asyncCall() {
 
 		var gamepad = navigator.getGamepads()[0];
 		if(gamepad){
-			/*gamepad.axes.map((v, idx) => {
-				postJson({"axis" : idx, "pos": v});
-				//console.log(idx + " is " + v);
-			})*/
-			postJson({"axis" : 0, "pos": gamepad.axes[0]});
-			postJson({"axis" : 1, "pos": gamepad.axes[1]});
+			gamepad.axes.map((v, idx) => {
+				//postJson({"axis" : idx, "pos": v});
+				console.log(idx + " is " + v);
+			})
+			
+			var pos;
+			const toggle = gamepad.axes[9];
+			switch (toggle) {
+				case -1:
+					console.log("stick up");
+					pos = frontPivotPos - pivotStepSize;
+					frontPivotPos = pos;
+					postJson({"side" : "frontPivot", "pow" : pos});
+					break;
+				case 0.14285719394683838: 
+					console.log("stick down");
+					pos = frontPivotPos + pivotStepSize;
+					frontPivotPos = pos;
+					postJson({"side" : "frontPivot", "pow" : pos});
+					break;
+				case 0.7142857313156128:		
+					console.log("stick side");
+					/*pos = backPivotPos + pivotStepSize;
+					backPivotPos = pos;*/
+					postJson({"side" : "backPivot", "pow" : 1});
+					break;
+				case -0.4285714030265808: 
+					console.log("stick otherSdie");
+					/*pos = backPivotPos - pivotStepSize;
+					backPivotPos = pos;*/
+					postJson({"side" : "backPivot", "pow" : 0});
+					break;
+				default: 
+					postJson({"side" : "backPivot", "pow" : 0.5});
+					break;
+			}
+			frontPivotPos = coerceIn(frontPivotPos, 0, 1);
+			backPivotPos = coerceIn(backPivotPos, 0, 1);
+			
+
+			/*const frontPivot = document.getElementById("frontPivotField");
+			frontPivot.addEventListener("keypress", function(event) {
+  				if (event.key === "Enter") {
+    					event.preventDefault();
+					postJson({"side" : "frontPivot", "pow" : this.value});
+  				}
+			});
+			const backPivot = document.getElementById("backPivotField");
+			backPivot.addEventListener("keypress", function(event) {
+  				if (event.key === "Enter") {
+    					event.preventDefault();
+					postJson({"side" : "backPivot", "pow" : this.value});
+  				}
+			});*/
+
+			const throttleKnob = gamepad.axes[6];
+			const forwardStick = gamepad.axes[0];
+			const sideStick = gamepad.axes[1];
+
+			console.log("throttle: " + throttleKnob + ", forwardStick: " + forwardStick + ", sideStick: " + sideStick); 
+
+			const throttle = ((-throttleKnob) + 1) * 0.5;
+
+			const leftPower = (forwardStick - sideStick) * throttle;
+			const rightPower = (forwardStick + sideStick) * throttle;
+			console.log("leftPower: " + leftPower + " rightPower: " + rightPower);
+			postJson({"side" : "left", "pow": leftPower});
+			postJson({"side" : "right", "pow": rightPower});
 			/*gamepad.buttons.map((b, idx)=>{
 				postJson({"button" : idx, "val": b});
 				//console.log("Button " + idx + " " + b.value + " pressed? " + b.pressed)

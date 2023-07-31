@@ -3,10 +3,305 @@ james
 + ./compileMotorControllerProgram.sh motorControlProgram.cpp
 Compiling motorControlProgram.cpp
 + g++ motorControlProgram.cpp -o motorControlProgram -lwiringPi -lwiringPiPca9685
-+ node serverApp.js
 + ./motorControlProgram
++ node serverApp.js
 Running motor control program.
 Connecting to the servo board via i2c...
 Connected - fd: 3
-+ echo 'I'\''m done - last command exited with 0'
-I'm done - last command exited with 0
+Sending to port 0
+Sent it
+Sending to port 1
+Sent it
+Sending to port 2
+Sent it
+Sending to port 3
+Sent it
+Sending to port 4
+Sent it
+Sending to port 5
+Sent it
+Sending to port 12
+Sent it
+Sending to port 13
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 14
+Sent it
+Sending to port 15
+Sent it
+Sending to port 

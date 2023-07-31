@@ -10,6 +10,7 @@ const networkInterfaces = os.networkInterfaces();
 const hostname = networkInterfaces['wlan0'][0]['address']
 const port = 8080
 
+
 console.log("Server program has started");
 
 const root = (req, res)=>{
@@ -86,7 +87,24 @@ function handlePost(data) {
 		parsedData = JSON.parse(data);
 
 		//console.log("data.keyCode " + parsedData.keyCode);
-
+		
+		switch (parsedData.side) {
+			case "left": 
+				console.log("left");
+				sendDataToMotorController({ portNumber : "0", position : convertJoystickToPower(parsedData.pow) });
+				sendDataToMotorController({ portNumber : "3", position : convertJoystickToPower(-parsedData.pow) });
+				sendDataToMotorController({ portNumber : "4", position : convertJoystickToPower(parsedData.pow) });
+				break;
+			case "right":
+				console.log("right");
+				sendDataToMotorController({ portNumber : "1", position : convertJoystickToPower(parsedData.pow) });
+				sendDataToMotorController({ portNumber : "2", position : convertJoystickToPower(-parsedData.pow) });
+				sendDataToMotorController({ portNumber : "5", position : convertJoystickToPower(-parsedData.pow) });
+				break;
+			default:
+				break;
+		}
+		sendDataToMotorController(convertKeyPressToActionTwo(parsedData))
 		sendDataToMotorController(convertKeyPressToAction(parsedData))
 	}
 }
@@ -98,25 +116,45 @@ function convertJoystickToPower(value) {
 	return (value + 1) / 2;
 }
 
-var forward = 0.5;
-var turn = 0.0;
-
-function convertKeyPressToAction(gamepadAction) {
-	console.log("gamepadAction " + gamepadAction.axis);
+function convertKeyPressToActionTwo(motorMove) {
+	console.log("gamepadAction " + motorMove);
+	
 	
 
-
-	return { portNumber : "0", position : convertJoystickToPower(gamepadAction.pos) };
-	return { portNumber : "0", position : convertJoystickToPower(gamepadAction.pos) };
-
-	switch (gamepadAction.axis) {
-		case 0: 
-			console.log("yo");
-			return { portNumber : "0", position : convertJoystickToPower(gamepadAction.pos) };
+	switch (motorMove.side) {
+		case "backPivot":
+			console.log("back pivot");
+			return { portNumber: "12", position : (motorMove.pow-1)*-1};
 			break;
-		case 1:
-			console.log("hi");
-			return { portNumber : "1", position : convertJoystickToPower(gamepadAction.pos) };
+
+		case "frontPivot":
+			console.log("front pivot");
+			return { portNumber: "14", position : ((motorMove.pow-1)*-1)};
+			break;
+		/*case "left": 
+			console.log("left");
+			return { portNumber : "2", position : convertJoystickToPower(-motorMove.pow) };
+			break;
+		case "right":
+			console.log("right");
+			return { portNumber : "3", position : convertJoystickToPower(-motorMove.pow) };
+			break;*/
+		default:
+			return null;
+	}
+}
+function convertKeyPressToAction(motorMove) {
+	console.log("gamepadAction " + motorMove);	
+
+	switch (motorMove.side) {
+		case "backPivot":
+			console.log("back pivot");
+			return { portNumber: "13", position : motorMove.pow };
+			break;
+
+		case "frontPivot":
+			console.log("front pivot");
+			return { portNumber: "15", position : motorMove.pow };
 			break;
 		default:
 			return null;
@@ -130,7 +168,7 @@ function sendDataToMotorController(data) {
 	}
 }
 
-function isJson(item) {
+function isJson(item) { 
   let value = typeof item !== "string" ? JSON.stringify(item) : item;
   try {
     value = JSON.parse(value);

@@ -2,6 +2,9 @@
 #include "pca9685.h"
 #include <wiringPi.h>
 
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,8 +99,33 @@ void moveServo(int servoNum, float position, int fd){
 	printf("Sent it\n");
 }
 
+/*void camera() {
+	const int fileDescriptor = open("/dev/video0", O_RDWR);
+	
+	struct v4l2_buffer buffer;
+	buffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+	const int numberOfBytes = 200;
+	const int video = read(fileDescriptor, buffer, numberOfBytes);
+}*/
+
+void initServos(int fd) {
+	moveServo(0, 0.5, fd);
+	moveServo(1, 0.5, fd);
+	moveServo(2, 0.5, fd);
+	moveServo(3, 0.5, fd);
+	moveServo(4, 0.5, fd);
+	moveServo(5, 0.5, fd);
+		
+	moveServo(12, 0, fd);
+	moveServo(13, 0, fd);
+	moveServo(14, 1, fd);
+	moveServo(15, 0, fd);
+}
 
 int main(int argc, char const* argv[]) {
+	//camera();
+
+
 	printf("Running motor control program.\n");
 	printf("Connecting to the servo board via i2c...\n");	
 	int fd = pca9685Setup(300, 0x40, hertz);
@@ -112,14 +140,34 @@ int main(int argc, char const* argv[]) {
 	pca9685PWMFreq(fd, hertz);
 	pca9685PWMReset(fd);
 	//float speed  = 0.05;
+	initServos(fd);
 
+	/*for (;;) {
+		moveServo(14, 1, fd);
+		moveServo(15, 0, fd);
+		sleep(2);
 
-	/*for(int port = 0; port <= 0; port++){
+		moveServo(14, 0, fd);
+		moveServo(15, 1, fd);
+		sleep(2);
+	}*/
+	/*for(int port = 0; port <= 3; port++){
+		const float power = 0.6;
+		moveServo(port, power, fd);
+		printf("Moving %d power %f", port, power);
+		sleep(1);
+	}
+	for(int port = 0; port <= 3; port++){
 		moveServo(port, 0.5, fd);
 	}
-	sleep(1);
-	for(int port = 0; port <= 0; port++){
-		moveServo(port, 0.45, fd);
+	for(int port = 0; port <= 3; port++){
+		const float power = 0.6;
+		moveServo(port, power, fd);
+		printf("Moving %d power %f", port, power);
+		sleep(1);
+	}
+	for(int port = 0; port <= 3; port++){
+		moveServo(port, 0.5, fd);
 	}*/
 
 	char* l = NULL;
@@ -130,7 +178,7 @@ int main(int argc, char const* argv[]) {
 		if (checkForPipeData(l)) {
 			MotorCommand motorCmd = pipeDataToMotorCommand(l);
 
-			printf("hi hi hi motorCmd: %i, %f\n", motorCmd.portNumber, motorCmd.position);
+			printf("motorCmd: %i, %f\n", motorCmd.portNumber, motorCmd.position);
 
 			//moveServo(0, motorCmd.position, fd);
 			moveServo(motorCmd.portNumber, motorCmd.position, fd);
