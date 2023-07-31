@@ -114,6 +114,9 @@ function handleCommand(foo){
 			sendDataToMotorController({ portNumber : "2", position : convertJoystickToPower(-parsedData.pow) });
 			sendDataToMotorController({ portNumber : "5", position : convertJoystickToPower(-parsedData.pow) });
 			break;
+		case "twist":
+			console.log("twisting");
+			sendDataToMotorController({ portNumber : "11", position : convertJoystickToPower(parsedData.pow) });
 		default:
 			break;
 	}

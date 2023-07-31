@@ -89,14 +89,26 @@
 	var frontPivotState = {"side" : "frontPivot", "pow" : 0.5};
 	var backPivotState = {"side" : "backPivot", "pow" : 0};
 
+	var twistState = {"side" : "twist", "pow" : 0};
+
 	function asyncCall() {
 
 		var gamepad = navigator.getGamepads()[0];
 		if(gamepad){
 			gamepad.axes.map((v, idx) => {
 				//postJson({"axis" : idx, "pos": v});
-				console.log(idx + " is " + v);
+				console.log("Axis " + idx + " is " + v);
 			})
+			gamepad.buttons.map((v, idx) => {
+				console.log("Button " + idx + " is " + v.value);
+			});
+
+
+			//const twist = gamepad.axes[5];
+			//switch (
+
+			twistState = {"side" : "twist", "pow" : 0};
+
 			
 			var pos;
 			const toggle = gamepad.axes[9];
