@@ -195,7 +195,7 @@ int main(int argc, char const* argv[]) {
 
 			//moveServo(0, motorCmd.position, fd);
 			if (motorCmd.portNumber == 10 || motorCmd.portNumber == 11) {
-				sendUnboundedPwm(motorCmd.portNumber, motorCmd.position, fd)
+				sendUnboundedPwm(motorCmd.portNumber, motorCmd.position, fd);
 			} else {
 				moveServo(motorCmd.portNumber, motorCmd.position, fd);
 			}
