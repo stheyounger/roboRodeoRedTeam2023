@@ -114,7 +114,7 @@
 			} else if (shoulderDown) {
 				shoulderState.pow -= shoulderIncrement;
 			}
-			//shoulderState.pow = coerceIn(shoulderState.pow, 0, 3);
+			shoulderState.pow = coerceIn(shoulderState.pow, -0.8, 1.6);
 
 			const elbowUp = gamepad.buttons[5].pressed;
 			const elbowmDown = gamepad.buttons[6].pressed;
