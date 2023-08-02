@@ -8,7 +8,7 @@ const ffmpeg = require('ffmpeg');
 
 const networkInterfaces = os.networkInterfaces();
 const hostname = networkInterfaces['wlan0'][0]['address']
-// const hostname = "localhost" 
+///const hostname = "localhost" 
 const port = 8080
 
 
@@ -114,9 +114,14 @@ function handleCommand(foo){
 			sendDataToMotorController({ portNumber : "2", position : convertJoystickToPower(-parsedData.pow) });
 			sendDataToMotorController({ portNumber : "5", position : convertJoystickToPower(-parsedData.pow) });
 			break;
-		case "twist":
-			console.log("twisting");
-			sendDataToMotorController({ portNumber : "11", position : convertJoystickToPower(parsedData.pow) });
+		case "shoulder":
+			console.log("shoulder");
+			sendDataToMotorController({ portNumber : "11", position : parsedData.pow });
+			break;
+		case "elbow":
+			console.log("elbow");
+			sendDataToMotorController({ portNumber : "10", position : parsedData.pow });
+			break;
 		default:
 			break;
 	}

@@ -89,7 +89,10 @@
 	var frontPivotState = {"side" : "frontPivot", "pow" : 0.5};
 	var backPivotState = {"side" : "backPivot", "pow" : 0};
 
-	var twistState = {"side" : "twist", "pow" : 0};
+	var shoulderState = {"side" : "shoulder", "pow" : 0.5};
+	const shoulderIncrement = 0.1;
+	var elbowState = {"side" : "elbow", "pow" : 0.5};
+	const elbowIncrement = 0.1;
 
 	function asyncCall() {
 
@@ -100,14 +103,27 @@
 				console.log("Axis " + idx + " is " + v);
 			})
 			gamepad.buttons.map((v, idx) => {
-				console.log("Button " + idx + " is " + v.value);
+				console.log("Button " + idx + " is " + v.pressed);
 			});
 
 
-			//const twist = gamepad.axes[5];
-			//switch (
+			const shoulderUp = gamepad.buttons[4].pressed;
+			const shoulderDown = gamepad.buttons[7].pressed;
+			if (shoulderUp) {
+				shoulderState.pow += shoulderIncrement;
+			} else if (shoulderDown) {
+				shoulderState.pow -= shoulderIncrement;
+			}
+			shoulderState.pow = coerceIn(shoulderState.pow, 0, 1);
 
-			twistState = {"side" : "twist", "pow" : 0};
+			const elbowUp = gamepad.buttons[5].pressed;
+			const elbowmDown = gamepad.buttons[6].pressed;
+			if (elbowUp) {
+				elbowState.pow += elbowIncrement;
+			} else if (elbowmDown) {
+				elbowState.pow -= elbowIncrement;
+			}
+			elbowState.pow = coerceIn(elbowState.pow, 0, 1);
 
 			
 			var pos;
@@ -184,7 +200,9 @@
 				left:leftState, 
 				right:rightState, 
 				frontPivot:frontPivotState, 
-				backPivot:backPivotState
+				backPivot:backPivotState,
+				shoulder: shoulderState,
+				elbow: elbowState
 			}
 			console.log(JSON.stringify(state, null, 4));
 
