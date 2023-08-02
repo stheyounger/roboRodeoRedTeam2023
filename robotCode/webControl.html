@@ -86,6 +86,8 @@
 	var frontPivotPos = 0.5;
 	var backPivotPos = 0.5;
 
+	var frontPivotState;
+	var backPivotState;
 
 	function asyncCall() {
 
@@ -98,33 +100,34 @@
 			
 			var pos;
 			const toggle = gamepad.axes[9];
+
 			switch (toggle) {
 				case -1:
 					console.log("stick up");
 					pos = frontPivotPos - pivotStepSize;
 					frontPivotPos = pos;
-					postJson({"side" : "frontPivot", "pow" : pos});
+					frontPivotState = ({"side" : "frontPivot", "pow" : pos});
 					break;
 				case 0.14285719394683838: 
 					console.log("stick down");
 					pos = frontPivotPos + pivotStepSize;
 					frontPivotPos = pos;
-					postJson({"side" : "frontPivot", "pow" : pos});
+					frontPivotState = ({"side" : "frontPivot", "pow" : pos});
 					break;
 				case 0.7142857313156128:		
 					console.log("stick side");
 					/*pos = backPivotPos + pivotStepSize;
 					backPivotPos = pos;*/
-					postJson({"side" : "backPivot", "pow" : 1});
+					backPivotState = ({"side" : "backPivot", "pow" : 1});
 					break;
 				case -0.4285714030265808: 
 					console.log("stick otherSdie");
 					/*pos = backPivotPos - pivotStepSize;
 					backPivotPos = pos;*/
-					postJson({"side" : "backPivot", "pow" : 0});
+					backPivotState = ({"side" : "backPivot", "pow" : 0});
 					break;
 				default: 
-					postJson({"side" : "backPivot", "pow" : 0.5});
+				backPivotState = ({"side" : "backPivot", "pow" : 0.5});
 					break;
 			}
 			frontPivotPos = coerceIn(frontPivotPos, 0, 1);
@@ -157,12 +160,25 @@
 			const leftPower = (forwardStick - sideStick) * throttle;
 			const rightPower = (forwardStick + sideStick) * throttle;
 			console.log("leftPower: " + leftPower + " rightPower: " + rightPower);
-			postJson({"side" : "left", "pow": leftPower});
-			postJson({"side" : "right", "pow": rightPower});
+
+			const leftState = {"side" : "left", "pow": leftPower}
+			const rightState = {"side" : "right", "pow": rightPower}
 			/*gamepad.buttons.map((b, idx)=>{
 				postJson({"button" : idx, "val": b});
 				//console.log("Button " + idx + " " + b.value + " pressed? " + b.pressed)
 			})*/
+
+			console.log(JSON.stringify({
+				leftState, 
+				rightState, 
+				frontPivotState, 
+				backPivotState
+			}, null, 4));
+
+			[leftState, rightState, frontPivotState, backPivotState].forEach(state =>{
+				if(state) postJson(state)
+			})
+
 		}
 
 		setTimeout(asyncCall, 100);

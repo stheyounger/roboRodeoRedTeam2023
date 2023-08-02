@@ -8,6 +8,7 @@ const ffmpeg = require('ffmpeg');
 
 const networkInterfaces = os.networkInterfaces();
 const hostname = networkInterfaces['wlan0'][0]['address']
+// const hostname = "localhost" 
 const port = 8080
 
 
