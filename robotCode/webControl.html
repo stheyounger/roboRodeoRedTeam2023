@@ -91,8 +91,13 @@
 
 	var shoulderState = {"side" : "shoulder", "pow" : 0.5};
 	const shoulderIncrement = 0.1;
+	const shoulderMin = -0.8;
+	const shoulderMax = 1.6;
+
 	var elbowState = {"side" : "elbow", "pow" : 0.5};
 	const elbowIncrement = 0.1;
+	const elbowMin = 0;
+	const elbowMax = 1.8;
 
 	function asyncCall() {
 
@@ -106,24 +111,34 @@
 				console.log("Button " + idx + " is " + v.pressed);
 			});
 
+			const armIn = gamepad.buttons[3].pressed;
+			const armOut = gamepad.buttons[2].pressed;
 
-			const shoulderUp = gamepad.buttons[4].pressed;
-			const shoulderDown = gamepad.buttons[7].pressed;
-			if (shoulderUp) {
-				shoulderState.pow += shoulderIncrement;
-			} else if (shoulderDown) {
-				shoulderState.pow -= shoulderIncrement;
-			}
-			shoulderState.pow = coerceIn(shoulderState.pow, -0.8, 1.6);
+			if (armIn) {
+				shoulderState.pow = shoulderMin;
+				elbowState.pow = elbowMin;
+			} else if (armOut) {
+				shoulderState.pow = shoulderMax;
+				elbowState.pow = elbowMax;
+			} else {
+				const shoulderUp = gamepad.buttons[4].pressed;
+				const shoulderDown = gamepad.buttons[7].pressed;
+				if (shoulderUp) {
+					shoulderState.pow += shoulderIncrement;
+				} else if (shoulderDown) {
+					shoulderState.pow -= shoulderIncrement;
+				}
+				shoulderState.pow = coerceIn(shoulderState.pow, shoulderMin, shoulderMax);
 
-			const elbowUp = gamepad.buttons[5].pressed;
-			const elbowmDown = gamepad.buttons[6].pressed;
-			if (elbowUp) {
-				elbowState.pow += elbowIncrement;
-			} else if (elbowmDown) {
-				elbowState.pow -= elbowIncrement;
+				const elbowUp = gamepad.buttons[5].pressed;
+				const elbowmDown = gamepad.buttons[6].pressed;
+				if (elbowUp) {
+					elbowState.pow += elbowIncrement;
+				} else if (elbowmDown) {
+					elbowState.pow -= elbowIncrement;
+				}
+				elbowState.pow = coerceIn(elbowState.pow, elbowMin, elbowMax);
 			}
-			elbowState.pow = coerceIn(elbowState.pow, 0, 1.8);
 
 			
 			var pos;
