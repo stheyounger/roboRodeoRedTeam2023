@@ -87,10 +87,13 @@ function handlePost(data) {
 	if (isJson(data)) {
 		parsedData = JSON.parse(data);
 
-		handleCommand(parsedData.left);
+		Object.values(parsedData).forEach(handleCommand);
+		/*handleCommand(parsedData.left);
 		handleCommand(parsedData.right);
 		handleCommand(parsedData.frontPivot);
 		handleCommand(parsedData.backPivot);
+		handleCommand(parsedData.shoulder);
+		handleCommand(parsedData.elbow);*/
 		
 	}
 }
