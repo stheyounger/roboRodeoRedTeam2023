@@ -87,6 +87,7 @@ function handlePost(data) {
 	if (isJson(data)) {
 		parsedData = JSON.parse(data);
 
+		console.log("Handling command", JSON.stringify(parsedData))
 		//console.log("data.keyCode " + parsedData.keyCode);
 		
 		switch (parsedData.side) {
