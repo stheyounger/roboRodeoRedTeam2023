@@ -87,28 +87,38 @@ function handlePost(data) {
 	if (isJson(data)) {
 		parsedData = JSON.parse(data);
 
-		console.log("Handling command", JSON.stringify(parsedData))
-		//console.log("data.keyCode " + parsedData.keyCode);
+		handleCommand(parsedData.left);
+		handleCommand(parsedData.right);
+		handleCommand(parsedData.frontPivot);
+		handleCommand(parsedData.backPivot);
 		
-		switch (parsedData.side) {
-			case "left": 
-				console.log("left");
-				sendDataToMotorController({ portNumber : "0", position : convertJoystickToPower(parsedData.pow) });
-				sendDataToMotorController({ portNumber : "3", position : convertJoystickToPower(-parsedData.pow) });
-				sendDataToMotorController({ portNumber : "4", position : convertJoystickToPower(parsedData.pow) });
-				break;
-			case "right":
-				console.log("right");
-				sendDataToMotorController({ portNumber : "1", position : convertJoystickToPower(parsedData.pow) });
-				sendDataToMotorController({ portNumber : "2", position : convertJoystickToPower(-parsedData.pow) });
-				sendDataToMotorController({ portNumber : "5", position : convertJoystickToPower(-parsedData.pow) });
-				break;
-			default:
-				break;
-		}
-		sendDataToMotorController(convertKeyPressToActionTwo(parsedData))
-		sendDataToMotorController(convertKeyPressToAction(parsedData))
 	}
+}
+
+function handleCommand(foo){
+	console.log("Handling command", JSON.stringify(foo))
+	if(!foo) return
+	const parsedData = foo
+	//console.log("data.keyCode " + parsedData.keyCode);
+	
+	switch (parsedData.side) {
+		case "left": 
+			console.log("left");
+			sendDataToMotorController({ portNumber : "0", position : convertJoystickToPower(parsedData.pow) });
+			sendDataToMotorController({ portNumber : "3", position : convertJoystickToPower(-parsedData.pow) });
+			sendDataToMotorController({ portNumber : "4", position : convertJoystickToPower(parsedData.pow) });
+			break;
+		case "right":
+			console.log("right");
+			sendDataToMotorController({ portNumber : "1", position : convertJoystickToPower(parsedData.pow) });
+			sendDataToMotorController({ portNumber : "2", position : convertJoystickToPower(-parsedData.pow) });
+			sendDataToMotorController({ portNumber : "5", position : convertJoystickToPower(-parsedData.pow) });
+			break;
+		default:
+			break;
+	}
+	sendDataToMotorController(convertKeyPressToActionTwo(parsedData))
+	sendDataToMotorController(convertKeyPressToAction(parsedData))
 }
 function isFloat(n){
     return Number(n) === n && n % 1 !== 0;

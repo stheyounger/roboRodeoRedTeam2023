@@ -86,8 +86,8 @@
 	var frontPivotPos = 0.5;
 	var backPivotPos = 0.5;
 
-	var frontPivotState;
-	var backPivotState;
+	var frontPivotState = {"side" : "frontPivot", "pow" : 0.5};
+	var backPivotState = {"side" : "backPivot", "pow" : 0};
 
 	function asyncCall() {
 
@@ -168,16 +168,18 @@
 				//console.log("Button " + idx + " " + b.value + " pressed? " + b.pressed)
 			})*/
 
-			console.log(JSON.stringify({
-				leftState, 
-				rightState, 
-				frontPivotState, 
-				backPivotState
-			}, null, 4));
+			const state = {
+				left:leftState, 
+				right:rightState, 
+				frontPivot:frontPivotState, 
+				backPivot:backPivotState
+			}
+			console.log(JSON.stringify(state, null, 4));
 
-			[leftState, rightState, frontPivotState, backPivotState].forEach(state =>{
-				if(state) postJson(state)
-			})
+			postJson(state)
+			// [leftState, rightState, frontPivotState, backPivotState].forEach(state =>{
+			// 	if(state) postJson(state)
+			// })
 
 		}
 
