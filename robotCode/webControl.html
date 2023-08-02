@@ -114,7 +114,7 @@
 			} else if (shoulderDown) {
 				shoulderState.pow -= shoulderIncrement;
 			}
-			shoulderState.pow = coerceIn(shoulderState.pow, 0, 1);
+			shoulderState.pow = coerceIn(shoulderState.pow, 0, 2);
 
 			const elbowUp = gamepad.buttons[5].pressed;
 			const elbowmDown = gamepad.buttons[6].pressed;
@@ -123,7 +123,7 @@
 			} else if (elbowmDown) {
 				elbowState.pow -= elbowIncrement;
 			}
-			elbowState.pow = coerceIn(elbowState.pow, 0, 1);
+			elbowState.pow = coerceIn(elbowState.pow, 0, 2);
 
 			
 			var pos;

@@ -99,6 +99,19 @@ void moveServo(int servoNum, float position, int fd){
 	printf("Sent it\n");
 }
 
+
+void sendUnboundedPwm(int servoNum, float position, int fd){
+	int port = servoNum;
+	printf("Sending unbounded pwm to port %d\n", port);
+	float zero = 1.1;
+	float full = 2.0;
+	float travel = full - zero;
+	//float boundedPosition = coerceIn(position, 0.0, 1.0);
+	float millis = zero + (position * travel);
+	pca9685PWMWrite(fd, port, 0, calcTicks(millis, hertz, maxPwm));
+	printf("Sent unbounded pwm \n");
+}
+
 /*void camera() {
 	const int fileDescriptor = open("/dev/video0", O_RDWR);
 	
@@ -181,10 +194,14 @@ int main(int argc, char const* argv[]) {
 			printf("motorCmd: %i, %f\n", motorCmd.portNumber, motorCmd.position);
 
 			//moveServo(0, motorCmd.position, fd);
-			moveServo(motorCmd.portNumber, motorCmd.position, fd);
+			if (motorCmd.portNumber == 10 || motorCmd.portNumber == 11) {
+				sendUnboundedPwm(motorCmd.portNumber, motorCmd.position, fd)
+			} else {
+				moveServo(motorCmd.portNumber, motorCmd.position, fd);
+			}
 		}
 
-    	}
+    }
 
 	return 0;
 }
